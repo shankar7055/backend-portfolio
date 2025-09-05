@@ -1,8 +1,9 @@
 import ImageComponent from "@/components/ImageComponent";
-import VideoComponent from "@/components/VideoComponent";
+import VideoComponent from "@/components/video-component";
 
 export default function Home() {
   return (
+    <main className="min-h-svh flex flex-col w-full bg-background sm:rounded-lg overflow-auto">     
     <div className="w-full pb-24 flex flex-col max-w-3xl p-6 gap-4 sm:gap-8 sm:pt-16 sm:px-12 sm:pb-24 self-center">
       <article>
         <h1>Lumini</h1>
@@ -89,6 +90,7 @@ export default function Home() {
         <h3>Ending the journey</h3>
         <p>Lastly, we help students find their desired occupation no matter how many times they want to iterate on the journey. Then, when satisfied with the results, we ask for feedback to improve our journey and illuminate more students.</p>
       </article>
-    </div>
+    </div>  
+    </main>
   );
 }

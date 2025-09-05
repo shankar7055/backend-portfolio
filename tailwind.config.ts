@@ -14,11 +14,14 @@ const config: Config = {
   prefix: "",
   theme: {
     fontSize: {
+      xs: "0.8rem",
       sm: "0.875rem",
-      base: "1rem",
+      base: "1.03rem",
       "baseSerif": "1.063rem",
       xl: "1.25rem",
-      "2xl": "1.5rem"
+      "2xl": "1.5rem",
+      "6xl": "4rem",
+
     },
     container: {
       center: true,
@@ -28,9 +31,17 @@ const config: Config = {
       },
     },
     extend: {
+      backgroundImage: {
+        'linear-grid-chess': 'linear-gradient(90deg,#efefef6f 1px,transparent 0),linear-gradient(180deg,#efefef6f 1px,transparent 0)',
+        'linear-grid': 'linear-gradient(90deg, hsla(0, 0%, 100%, 0.1) 1px, transparent 0),linear-gradient(180deg, hsla(0, 0%, 100%, 0.1) 1px, transparent 0)',
+        'linear-big-grid': 'linear-gradient(90deg, hsla(0, 0%, 100%, 0.25) 1px, transparent 0), linear-gradient(180deg, hsla(0, 0%, 83.9%, 0.25) 1px, transparent 0)',
+        'diagonal-grid': 'linear-gradient(45deg, transparent 49.5%, hsla(0, 0%, 100%, 0.25) 0, hsla(0, 0%, 100%, 0.25) 50.5%,transparent 0), linear-gradient(-45deg,transparent 49.5%,hsla(0, 0%, 100%, 0.25) 0,hsla(0, 0%, 100%, 0.25) 50.5%, transparent 0)'
+      },
+
       fontFamily: {
         sans: ['var(--font-sohne)', { fontFeatureSettings: '"kern"', }],
-        serif: ['var(--font-plantijn)', { fontFeatureSettings: '"liga", "calt"', }]
+        serif: ['var(--font-plantijn)', { fontFeatureSettings: '"liga", "calt"', }],
+        handwritten: ['var(--font-handwritten)', 'Kalam', 'Caveat', 'Dancing Script', 'cursive']
       },
 
       colors: {
@@ -143,6 +154,10 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        init: {
+          '0%': { transform: 'rotateY(-30deg)' },
+          '100%': { transform: 'rotateY(0deg)' }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

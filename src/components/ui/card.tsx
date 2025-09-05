@@ -1,4 +1,5 @@
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
 const Card = React.forwardRef<
@@ -8,14 +9,40 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-lg border bg-component text-foreground shadow-sm h-full",
+      "rounded-lg bg-component text-card-foreground shadow-sm relative",
       className
     )}
     {...props}
   />
 ))
-
 Card.displayName = "Card"
+
+const CardHeader = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("flex flex-col px-4 py-2 mb-0 w-full", className)}
+    {...props}
+  />
+))
+CardHeader.displayName = "CardHeader"
+
+const CardTitle = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+    <h3
+      ref={ref}
+      className={cn(
+        "text-sm leading-none",
+        className
+      )}
+      {...props}
+    />
+))
+CardTitle.displayName = "CardTitle"
 
 const CardImage = React.forwardRef<
   HTMLImageElement,
@@ -32,33 +59,6 @@ const CardVideo = React.forwardRef<
   <video ref={ref} className={cn("h-auto w-full rounded-t-lg", className)} {...props} />
 ));
 CardVideo.displayName = "CardVideo";
-
-const CardHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex flex-row items-center justify-between space-y-0 px-4 pt-4 pb-1", className)}
-    {...props}
-  />
-))
-CardHeader.displayName = "CardHeader"
-
-const CardTitle = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h3
-    ref={ref}
-    className={cn(
-      "text-xl font-medium leading-none",
-      className
-    )}
-    {...props}
-  />
-))
-CardTitle.displayName = "CardTitle"
 
 const CardDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -92,4 +92,8 @@ const CardFooter = React.forwardRef<
 ))
 CardFooter.displayName = "CardFooter"
 
-export { Card, CardImage, CardVideo, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+export { Card, CardHeader, CardVideo, CardImage, CardFooter, CardTitle, CardDescription, CardContent }
+
+
+
+

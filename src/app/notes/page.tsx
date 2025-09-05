@@ -4,9 +4,9 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Notes() {
 	return (
-		<div className="w-full pb-24 flex flex-col max-w-3xl p-6 gap-4 sm:gap-8 sm:pt-16 sm:px-12 sm:pb-24 self-center">
-			<h1> Notes </h1>
-			<ul className="flex flex-1 flex-col gap-2">
+		<main className="flex flex-col gap-4 max-w-3xl mx-auto bg-background p-6 pb-24 sm:gap-8 sm:pt-16 sm:pb-28">
+			<ul className="flex flex-1 flex-col gap-2 h-fit ">
+				<h2 className="mt-8 mb-4 tabular"> 2024</h2>
 				<li>
 					<Button asChild variant="ghost">
 						<Link className="w-[calc(100%+32px)] justify-between -mx-4" href="/notes/redesigning-my-portfolio"> Redesigning my portfolio
@@ -15,6 +15,7 @@ export default function Notes() {
 						</Link>
 					</Button>
 				</li>
+				<h2 className="mt-8 mb-4 tabular"> 2023</h2>
 				<li>
 					<Button asChild variant="ghost">
 						<Link className="w-[calc(100%+32px)] justify-between -mx-4" href="/notes/the-zettelkasten-method"> The Zettelkasten method
@@ -23,6 +24,7 @@ export default function Notes() {
 						</Link>
 					</Button>
 				</li>
+				<h2 className="mt-8 mb-4 tabular"> 2018</h2>
 				<li>
 					<Button asChild variant="ghost">
 						<Link className="w-[calc(100%+32px)] justify-between -mx-4" href="/notes/how-to-study-&-learn"> How to study & learn
@@ -40,6 +42,6 @@ export default function Notes() {
 					</Button>
 				</li>
 			</ul>
-		</div>
+		</main>
 	);
 }

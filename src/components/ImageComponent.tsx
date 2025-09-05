@@ -1,34 +1,42 @@
-"use client";
+"use client"
+
 import React, { useState } from 'react';
-import Image from 'next/image';
 import * as Dialog from '@radix-ui/react-dialog';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import { X, ZoomIn, ZoomOut } from "lucide-react";
-import { Button } from './ui/button';
 
-export default function ImageComponent({ src, alt, className }: { src: string; alt?: string; className?: string; }) {
-    const [isZoomed, setIsZoomed] = useState(false);
-
-    if (!src) return null;
+// Inner component that uses the cursor context
+function ImageContent({ src, alt, className, width, height, isZoomed, setIsZoomed }: {
+    src: string;
+    alt?: string;
+    className?: string;
+    width: number;
+    height: number;
+    isZoomed: boolean;
+    setIsZoomed: (zoomed: boolean) => void;
+}) {
 
     return (
         <Dialog.Root open={isZoomed} onOpenChange={setIsZoomed}>
             <Dialog.Trigger asChild>
-                <motion.div className="relative cursor-pointer" layoutId={src} transition={{ duration: 0.4 }}>
+                <motion.div
+                    className="relative cursor-zoom-in"
+                    layoutId={src}
+                    transition={{ duration: 0.4 }}
+                    data-cursor="hover"
+                >
                     <motion.img
+
                         src={src}
                         alt={alt || ''}
                         sizes="100vw"
                         className={className}
-                        width={672}
-                        height={482}
+                        width={width}
+                        height={height}
                     />
-                    <Button size="icon" variant="ghost" className='absolute bottom-4 right-4 bg-background/70 rounded-full'>
-                        <ZoomIn className='h-5 w-5' />
-                    </Button>
                 </motion.div>
             </Dialog.Trigger>
+
             <AnimatePresence>
                 {isZoomed && (
                     <Dialog.Portal forceMount>
@@ -41,26 +49,24 @@ export default function ImageComponent({ src, alt, className }: { src: string; a
                                 transition={{ duration: 0.3 }}
                             />
                             <Dialog.Close asChild>
-                                <Dialog.Content forceMount asChild className="fixed p-0 max-w-5xl w-full rounded-xl overflow-clip z-50 border-none flex items-center justify-center shadow-xl cursor-pointer">
+                                <Dialog.Content forceMount asChild className="fixed p-0 max-w-5xl w-full rounded-xl overflow-clip z-50 border-none flex items-center justify-center shadow-xl cursor-zoom-out">
                                     <motion.div
                                         className='aspect-auto'
                                         layoutId={src}
                                         transition={{ duration: 0.3 }}
+                                        data-cursor="expanded"
                                     >
                                         <VisuallyHidden.Root><Dialog.Title /></VisuallyHidden.Root>
                                         <VisuallyHidden.Root><Dialog.Description /></VisuallyHidden.Root>
 
                                         <motion.img
+
                                             src={src}
                                             alt={alt || ''}
                                             className="z-50 transform-none"
-                                            width={2400}
-                                            height={2400}
+                                            width={width}
+                                            height={height}
                                         />
-                                        <Button size="icon" variant="ghost" className='absolute bottom-4 right-4 bg-background/70 z-50 rounded-full'>
-                                            <ZoomOut className='h-5 w-5' />
-                                        </Button>
-
                                     </motion.div>
                                 </Dialog.Content>
                             </Dialog.Close>
@@ -69,5 +75,29 @@ export default function ImageComponent({ src, alt, className }: { src: string; a
                 )}
             </AnimatePresence>
         </Dialog.Root>
+    );
+}
+
+export default function ImageComponent({ src, alt, className, width, height }: {
+    src: string;
+    alt?: string;
+    className?: string;
+    width: number;
+    height: number;
+}) {
+    const [isZoomed, setIsZoomed] = useState(false);
+
+    if (!src) return null;
+
+    return (
+        <ImageContent
+            src={src}
+            alt={alt}
+            className={className}
+            width={width}
+            height={height}
+            isZoomed={isZoomed}
+            setIsZoomed={setIsZoomed}
+        />
     );
 }

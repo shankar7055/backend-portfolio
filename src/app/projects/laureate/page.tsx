@@ -2,10 +2,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardImage, 
 import { AreaChartHero } from "@/components/tremor-components/areachart";
 import Image from "next/image";
 import ImageComponent from "@/components/ImageComponent";
-import VideoComponent from "@/components/VideoComponent";
+import VideoComponent from "@/components/video-component";
 
 export default function Home() {
   return (
+    <main className="min-h-svh flex flex-col w-full bg-background sm:rounded-lg overflow-auto"> 
     <div className="w-full pb-24 flex flex-col max-w-3xl p-6 gap-4 sm:gap-8 sm:pt-16 sm:px-12 sm:pb-24 self-center">
       <article>
         <h1> Laureate </h1>
@@ -212,5 +213,6 @@ export default function Home() {
         </div>
       </article>
     </div>
+    </main>
   );
 }

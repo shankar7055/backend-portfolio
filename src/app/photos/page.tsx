@@ -20,8 +20,7 @@ export default function Photos() {
 
   const allImages = [
     // New York - Landscape
-
-    "/photography/newYork/landscape/DSCF1732.jpg",
+    /*
     "/photography/newYork/landscape/DSCF1433.jpg",
     "/photography/newYork/landscape/DSCF1447.jpg",
     "/photography/newYork/landscape/DSCF1450.jpg",
@@ -29,6 +28,7 @@ export default function Photos() {
     "/photography/newYork/landscape/DSCF1472.jpg",
     "/photography/newYork/landscape/DSCF1490.jpg",
     "/photography/newYork/landscape/DSCF1502.jpg",
+    "/photography/newYork/landscape/DSCF1504.jpg",
     "/photography/newYork/landscape/DSCF1507.jpg",
     "/photography/newYork/landscape/DSCF1512.jpg",
     "/photography/newYork/landscape/DSCF1517.jpg",
@@ -46,12 +46,13 @@ export default function Photos() {
     "/photography/newYork/landscape/DSCF1659.jpg",
     "/photography/newYork/landscape/DSCF1697.jpg",
     "/photography/newYork/landscape/DSCF1727.jpg",
+    "/photography/newYork/landscape/DSCF1732.jpg",
     "/photography/newYork/landscape/DSCF1774.jpg",
     "/photography/newYork/landscape/DSCF1806.jpg",
+    */
 
 
     // New York - Portrait
-    "/photography/newYork/portrait/DSCF1582.jpg",
     "/photography/newYork/portrait/DSCF1585.jpg",
     "/photography/newYork/portrait/DSCF1597.jpg",
     "/photography/newYork/portrait/DSCF1603.jpg",
@@ -87,45 +88,44 @@ export default function Photos() {
 
 
     // Toronto - Landscape
-    "/photography/toronto/landscape/DSCF0022.jpg",
-    "/photography/toronto/landscape/DSCF0029.jpg",
-    "/photography/toronto/landscape/DSCF0037.jpg",
-    "/photography/toronto/landscape/DSCF0041.jpg",
-    "/photography/toronto/landscape/DSCF0063.jpg",
-    "/photography/toronto/landscape/DSCF0072.jpg",
-    "/photography/toronto/landscape/DSCF0074.jpg",
-    "/photography/toronto/landscape/DSCF0099.jpg",
-    "/photography/toronto/landscape/DSCF0111.jpg",
-    "/photography/toronto/landscape/DSCF0113.jpg",
-    "/photography/toronto/landscape/DSCF0118.jpg",
-    "/photography/toronto/landscape/DSCF0127.jpg",
-    "/photography/toronto/landscape/DSCF0130.jpg",
-    "/photography/toronto/landscape/DSCF0138.jpg",
-    "/photography/toronto/landscape/DSCF0144.jpg",
-    "/photography/toronto/landscape/DSCF0147.jpg",
-    "/photography/toronto/landscape/DSCF0180.jpg",
-    "/photography/toronto/landscape/DSCF0223.jpg",
-    "/photography/toronto/landscape/DSCF0224.jpg",
-    "/photography/toronto/landscape/DSCF0267.jpg",
-    "/photography/toronto/landscape/DSCF0268.jpg",
-    "/photography/toronto/landscape/DSCF0271.jpg",
-    "/photography/toronto/landscape/DSCF0274.jpg",
-    "/photography/toronto/landscape/DSCF0275.jpg",
-    "/photography/toronto/landscape/DSCF0307.jpg",
-    "/photography/toronto/landscape/DSCF0310.jpg",
-    "/photography/toronto/landscape/DSCF0400.jpg",
-    "/photography/toronto/landscape/DSCF0414.jpg",
-    "/photography/toronto/landscape/DSCF0417.jpg",
-    "/photography/toronto/landscape/DSCF0435.jpg",
-    "/photography/toronto/landscape/DSCF0437.jpg",
-    "/photography/toronto/landscape/DSCF0439.jpg",
-    "/photography/toronto/landscape/DSCF0442.jpg",
-    "/photography/toronto/landscape/DSCF0447.jpg",
-    "/photography/toronto/landscape/DSCF0448.jpg",
-    "/photography/toronto/landscape/DSCF0457.jpg",
-    "/photography/toronto/landscape/DSCF0460.jpg",
-    "/photography/toronto/landscape/DSCF0478.jpg",
-    "/photography/toronto/landscape/DSCF0483.jpg",
+    /*} "/photography/toronto/landscape/DSCF0022.jpg",
+     "/photography/toronto/landscape/DSCF0029.jpg",
+     "/photography/toronto/landscape/DSCF0037.jpg",
+     "/photography/toronto/landscape/DSCF0041.jpg",
+     "/photography/toronto/landscape/DSCF0063.jpg",
+     "/photography/toronto/landscape/DSCF0072.jpg",
+     "/photography/toronto/landscape/DSCF0074.jpg",
+     "/photography/toronto/landscape/DSCF0099.jpg",
+     "/photography/toronto/landscape/DSCF0111.jpg",
+     "/photography/toronto/landscape/DSCF0113.jpg",
+     "/photography/toronto/landscape/DSCF0118.jpg",
+     "/photography/toronto/landscape/DSCF0127.jpg",
+     "/photography/toronto/landscape/DSCF0130.jpg",
+     "/photography/toronto/landscape/DSCF0138.jpg",
+     "/photography/toronto/landscape/DSCF0144.jpg",
+     "/photography/toronto/landscape/DSCF0147.jpg",
+     "/photography/toronto/landscape/DSCF0180.jpg",
+     "/photography/toronto/landscape/DSCF0224.jpg",
+     "/photography/toronto/landscape/DSCF0267.jpg",
+     "/photography/toronto/landscape/DSCF0268.jpg",
+     "/photography/toronto/landscape/DSCF0271.jpg",
+     "/photography/toronto/landscape/DSCF0274.jpg",
+     "/photography/toronto/landscape/DSCF0275.jpg",
+     "/photography/toronto/landscape/DSCF0307.jpg",
+     "/photography/toronto/landscape/DSCF0310.jpg",
+     "/photography/toronto/landscape/DSCF0400.jpg",
+     "/photography/toronto/landscape/DSCF0414.jpg",
+     "/photography/toronto/landscape/DSCF0417.jpg",
+     "/photography/toronto/landscape/DSCF0435.jpg",
+     "/photography/toronto/landscape/DSCF0437.jpg",
+     "/photography/toronto/landscape/DSCF0439.jpg",
+     "/photography/toronto/landscape/DSCF0448.jpg",
+     "/photography/toronto/landscape/DSCF0457.jpg",
+     "/photography/toronto/landscape/DSCF0460.jpg",
+     "/photography/toronto/landscape/DSCF0478.jpg",
+     "/photography/toronto/landscape/DSCF0483.jpg",
+ 
+     */
 
 
     // Toronto - Portrait
@@ -140,7 +140,11 @@ export default function Photos() {
     "/photography/toronto/portrait/IMG_3219.jpg",
     "/photography/toronto/portrait/IMG_3249.jpg",
     "/photography/toronto/portrait/IMG_3267.jpg",
-    "/photography/toronto/portrait/IMG_3273.jpg"
+    "/photography/toronto/portrait/IMG_3273.jpg",
+
+
+    // Patagonia - Portrait
+    "/photography/patagonia/portrait/IMG3272.jpg"
   ];
 
   const openModal = (index: number) => {
@@ -149,10 +153,8 @@ export default function Photos() {
   };
 
   return (
-    <div className="w-full pb-24 flex flex-col max-w-3xl p-6 gap-4 sm:gap-8 sm:pt-16 sm:px-12 sm:pb-24 self-center">
-      <h1>Photos</h1>
-
-      <section className="grid grid-rows grid-cols-3 gap-4">
+    <main className="flex flex-col gap-12 sm:gap-16 p-8 sm:pt-16 pb-28">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
         <Dialog.Root open={modalOpen} onOpenChange={setModalOpen}>
           {allImages.map((src, index) => (
             <Dialog.Trigger asChild key={index}>
@@ -175,16 +177,16 @@ export default function Photos() {
                 <CarouselContent className="max-h-fit">
                   {allImages.map((src, index) => (
                     <CarouselItem className="max-h-[80vh] max-w-fit" key={index}>
-                        <Image
-                          src={src}
-                          alt={`Carousel Image ${index + 1}`}
-                          width={2400}
-                          height={1605}
-                          sizes="100vw"
-                          className="rounded-sm object-cover rounded-xl w-fit h-full max-h-[81vh]"
-                        />
-                        <VisuallyHidden.Root><Dialog.Title /></VisuallyHidden.Root>
-                        <VisuallyHidden.Root><Dialog.Description /></VisuallyHidden.Root>
+                      <Image
+                        src={src}
+                        alt={`Carousel Image ${index + 1}`}
+                        width={2400}
+                        height={1605}
+                        sizes="100vw"
+                        className="rounded-sm object-cover rounded-xl w-fit h-full max-h-[81vh]"
+                      />
+                      <VisuallyHidden.Root><Dialog.Title /></VisuallyHidden.Root>
+                      <VisuallyHidden.Root><Dialog.Description /></VisuallyHidden.Root>
                     </CarouselItem>
                   ))}
                 </CarouselContent>
@@ -201,6 +203,7 @@ export default function Photos() {
           </Dialog.Portal>
         </Dialog.Root>
       </section>
-    </div>
+
+    </main>
   );
 }

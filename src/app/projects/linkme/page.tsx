@@ -1,10 +1,11 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardImage, CardTitle } from "@/components/ui/card";
 import { AreaChartHero } from "@/components/tremor-components/areachart";
 import ImageComponent from "@/components/ImageComponent";
-import VideoComponent from "@/components/VideoComponent"
+import VideoComponent from "@/components/video-component"
 
 export default function Home() {
   return (
+    <main className="min-h-svh flex flex-col w-full bg-background sm:rounded-lg overflow-auto cursor-auto"> 
     <div className="w-full pb-24 flex flex-col max-w-3xl p-6 gap-4 sm:gap-8 sm:pt-16 sm:px-12 sm:pb-24 self-center">
       <article>
         <h1> Link.me </h1>
@@ -13,7 +14,7 @@ export default function Home() {
         <p> Link.me is a payment link app that empowers digital and brick-and-mortar businesses to sell products and services online without a website. </p>
         <p> I worked as a Product Designer at Link.me, leading the product strategy and design for the mobile team by creating a culture deeply oriented around customers with research. </p>
 
-        <ImageComponent src="/projects/linkme/linkme_home.png" alt="" />
+        <ImageComponent width={2000} height={1433} src="/projects/linkme/linkme_home.png" alt="" />
 
         <h2> Perfecting the Management </h2>
         <p> In 2019, Pagar.me released a payment link app for 100 companies in Brazil. By 2020, Link.me has transacted over 100 million payments with over 5.000 companies. </p>
@@ -21,14 +22,14 @@ export default function Home() {
         <p> The Link.me app struggled to scale alongside the company's hyper-growth. The product strategy started to slip as several features competed for attention and the app performance issues increased. </p>
         <p> Our challenge was to evolve the service with new customers and address their pain points to increase our activation rate and decrease our high churn rates. </p>
 
-        <ImageComponent src="/projects/linkme/linkme_first_section.png" alt="" />
+        <ImageComponent width={2000} height={1208} src="/projects/linkme/linkme_first_section.png" alt="" />
 
         <h2> Making sense of the strategy mess </h2>
         <p> When I joined the team as their first product designer, they were stuck deciding features to match our competitors in the market. Even though this strategy has its benefits, it was not helping us to increase our activation rate and reduce our churn. </p>
         <p> To distinguish ourselves in an already competitive and mature market, we needed user research to help us translate insights into features that address customer's behaviors and motivations. </p>
         <p> Without pre-existing insights, I partnered with our product manager and the lead developer to explore how our customers were getting around. </p>
 
-        <ImageComponent src="/projects/linkme/linkme_research.png" alt="" />
+        <ImageComponent width={1260} height={784} src="/projects/linkme/linkme_research.png" alt="" />
 
         <h2>How do you use Link.me? </h2>
         <p> We interviewed 15 customers to learn about the expectations and ideas for improvement they had about our product. We also asked customers to walk us through how they complete their management tasks and their daily frustrations. </p>
@@ -69,7 +70,7 @@ export default function Home() {
         <p> Digital businesses suffered after experiencing growth because they couldn't distribute our product to their sales team since we only had admin access. </p>
 
 
-        <ImageComponent src="/projects/linkme/Journey_map.svg" alt="" />
+        <ImageComponent width={2000} height={1433} src="/projects/linkme/Journey_map.svg" alt="" />
 
         <p> These findings were challenging to address because we needed different teams with diverse priorities. However, the time and energy spent to solve these issues were essential to help businesses survive during the pandemic. </p>
         <h2> Improving Link.me </h2>
@@ -114,5 +115,6 @@ export default function Home() {
         </div>
       </article>
     </div>
+    </main>
   );
 }

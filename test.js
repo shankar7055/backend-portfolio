@@ -49,6 +49,5 @@ fs.readdirSync(svgDir).forEach(file => {
     const outputPath = path.join(outputDir, `${componentName}.tsx`);
     
     fs.writeFileSync(outputPath, tsxContent);
-    console.log(`Converted ${file} to ${componentName}.tsx`);
   }
 });

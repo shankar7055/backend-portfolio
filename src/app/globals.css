@@ -2,10 +2,102 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes flipTop {
+  0% { transform: rotateX(0deg); opacity: 1; }
+  99%{ transform: rotateX(-90deg); opacity: 1; }
+  100% { transform: rotateX(-90deg); opacity: 0; }
+}
+
+@keyframes flipBottom {
+  0% { transform: rotateX(90deg); opacity: 0; }
+  1% { transform: rotateX(90deg); opacity: 1; }
+  100% { transform: rotateX(0deg); opacity: 1; }
+}
+
+.animate-flip-top {
+  animation: flipTop 0.4s ease-in forwards;
+  transform-origin: center;
+  transform-style: preserve-3d;
+  opacity: 0;
+}
+
+.animate-flip-bottom {
+  animation: flipBottom 0.3s ease-out forwards;
+  animation-delay: 0.4s;
+  transform-origin: center;
+  transform-style: preserve-3d;
+  opacity: 0;
+}
+
+.flip-container {
+  perspective: 250px;
+  perspective-origin: 50% 50%;
+}
+
+@keyframes wiggle {
+  0% { transform: translate(0px, 0px) ; }
+  50% { transform: translate(0.55px, -0.55px)  }
+  100% { transform: translate(0px, 0px) }
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-293px); }
+}
+
+@keyframes scroll-right {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(293px); }
+}
+
+.scrolling-text-top {
+  animation: scroll-left 1.5s linear infinite;
+  animation-play-state: paused;
+  animation-fill-mode: both;
+}
+
+.scrolling-text-bottom {
+  animation: scroll-right 1.5s linear infinite;
+  animation-play-state: paused;
+  animation-fill-mode: both;
+}
+
+.group:hover .scrolling-text-top,
+.group:hover .scrolling-text-bottom {
+  animation-play-state: running;
+}
+
+@theme inline {
+  --animate-aurora: aurora 60s linear infinite;
+  @keyframes aurora {
+    from {
+      background-position:
+        50% 50%,
+        50% 50%;
+    }
+    to {
+      background-position:
+        350% 50%,
+        350% 50%;
+    }
+  }
+}
+
+.class-test{
+  transform: rotate3d(1,0,0,90deg)
+}
+
+.clip-path-top-digit{
+  clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%);
+}
+
+.clip-path-bottom-digit{
+  clip-path: polygon(0% 50%, 100% 50%, 100% 100%, 0% 100%);
+}
+
 body.no-scroll {
   overflow: hidden;
 }
-
 
 .orchestration{
   --delay:120ms;
@@ -25,6 +117,16 @@ body.no-scroll {
     opacity:1;
     transform:translateY(0px);
   }
+}
+
+/* Intersection Observer Animations */
+.animate-fade-in {
+  opacity: 0;
+  transition: opacity 0.8s ease-out;
+}
+
+.animate-fade-in.visible {
+  opacity: 1;
 }
 
 @media (hover: none) {
@@ -184,17 +286,17 @@ code[data-theme*=" "], code[data-theme*=" "] span {
     @apply font-medium;
   }
   h1 {
-    @apply text-2xl;
+    @apply text-xl;
   }
   h2 {
     @apply text-xl;
   }
   h3 {
-    @apply text-base;
+    @apply text-base tracking-[-0.21px];
   }
 
   p{
-    @apply text-base mb-6 leading-7;
+    @apply text-base tracking-[-0.21px];
   }
 
   em{
@@ -225,6 +327,12 @@ code[data-theme*=" "], code[data-theme*=" "] span {
     @apply border rounded-lg my-4 w-full max-w-4xl;
   }
 
+  article p {
+    @apply mb-6 leading-7
+  }
+
+
+
   /* Code block */
 
   pre {
@@ -247,3 +355,4 @@ code[data-theme*=" "], code[data-theme*=" "] span {
     @apply p-1 bg-component rounded-md font-mono text-[13px];    
   }
 }
+

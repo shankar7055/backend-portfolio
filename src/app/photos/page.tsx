@@ -144,7 +144,82 @@ export default function Photos() {
 
 
     // Patagonia - Portrait
-    "/photography/patagonia/portrait/IMG3272.jpg"
+    "/photography/patagonia/portrait/DSCF1878.jpg",
+    "/photography/patagonia/portrait/DSCF1879.jpg",
+    "/photography/patagonia/portrait/DSCF1885.jpg",
+    "/photography/patagonia/portrait/DSCF1892.jpg",
+    "/photography/patagonia/portrait/DSCF1895.jpg",
+    "/photography/patagonia/portrait/DSCF1896.jpg",
+    "/photography/patagonia/portrait/DSCF1901.jpg",
+    "/photography/patagonia/portrait/DSCF1979.jpg",
+    "/photography/patagonia/portrait/DSCF1986.jpg",
+    "/photography/patagonia/portrait/DSCF1993.jpg",
+    "/photography/patagonia/portrait/DSCF2009.jpg",
+    "/photography/patagonia/portrait/DSCF2051.jpg",
+    "/photography/patagonia/portrait/DSCF2052.jpg",
+    "/photography/patagonia/portrait/DSCF2056.jpg",
+    "/photography/patagonia/portrait/DSCF2063.jpg",
+    "/photography/patagonia/portrait/DSCF2076.jpg",
+    "/photography/patagonia/portrait/DSCF2144.jpg",
+    "/photography/patagonia/portrait/DSCF2149.jpg",
+    "/photography/patagonia/portrait/DSCF2197.jpg",
+    "/photography/patagonia/portrait/DSCF2199.jpg",
+    "/photography/patagonia/portrait/DSCF2203.jpg",
+    "/photography/patagonia/portrait/DSCF2204.jpg",
+    "/photography/patagonia/portrait/DSCF2210.jpg",
+    "/photography/patagonia/portrait/DSCF2214.jpg",
+    "/photography/patagonia/portrait/DSCF2221.jpg",
+    "/photography/patagonia/portrait/DSCF2241.jpg",
+    "/photography/patagonia/portrait/DSCF2246.jpg",
+    "/photography/patagonia/portrait/DSCF2251.jpg",
+    "/photography/patagonia/portrait/DSCF2253.jpg",
+    "/photography/patagonia/portrait/DSCF2256.jpg",
+    "/photography/patagonia/portrait/DSCF2262.jpg",
+    "/photography/patagonia/portrait/DSCF2264.jpg",
+    "/photography/patagonia/portrait/DSCF2267.jpg",
+    "/photography/patagonia/portrait/DSCF2271.jpg",
+    "/photography/patagonia/portrait/DSCF2284.jpg",
+    "/photography/patagonia/portrait/DSCF2290.jpg",
+    "/photography/patagonia/portrait/DSCF2314.jpg",
+    "/photography/patagonia/portrait/DSCF2375.jpg",
+    "/photography/patagonia/portrait/DSCF2386.jpg",
+    "/photography/patagonia/portrait/DSCF2391.jpg",
+    "/photography/patagonia/portrait/DSCF2392.jpg",
+    "/photography/patagonia/portrait/DSCF2406.jpg",
+    "/photography/patagonia/portrait/DSCF2410.jpg",
+    "/photography/patagonia/portrait/DSCF2411.jpg",
+    "/photography/patagonia/portrait/DSCF2417.jpg",
+    "/photography/patagonia/portrait/DSCF2421.jpg",
+    "/photography/patagonia/portrait/DSCF2424.jpg",
+    "/photography/patagonia/portrait/DSCF2432.jpg",
+    "/photography/patagonia/portrait/DSCF2451.jpg",
+    "/photography/patagonia/portrait/DSCF2456.jpg",
+    "/photography/patagonia/portrait/DSCF2462.jpg",
+    "/photography/patagonia/portrait/DSCF2463.jpg",
+    "/photography/patagonia/portrait/DSCF2464.jpg",
+    "/photography/patagonia/portrait/DSCF2467.jpg",
+    "/photography/patagonia/portrait/DSCF2468.jpg",
+    "/photography/patagonia/portrait/DSCF2475.jpg",
+    "/photography/patagonia/portrait/DSCF2510.jpg",
+    "/photography/patagonia/portrait/DSCF2530.jpg",
+    "/photography/patagonia/portrait/DSCF2549.jpg",
+    "/photography/patagonia/portrait/DSCF2556.jpg",
+    "/photography/patagonia/portrait/DSCF2560.jpg",
+    "/photography/patagonia/portrait/DSCF2586.jpg",
+    "/photography/patagonia/portrait/DSCF2596.jpg",
+    "/photography/patagonia/portrait/DSCF2602.jpg",
+    "/photography/patagonia/portrait/DSCF2628.jpg",
+    "/photography/patagonia/portrait/DSCF2640.jpg",
+    "/photography/patagonia/portrait/DSCF2641.jpg",
+    "/photography/patagonia/portrait/DSCF2648.jpg",
+    "/photography/patagonia/portrait/DSCF2659.jpg",
+    "/photography/patagonia/portrait/DSCF2663.jpg",
+    "/photography/patagonia/portrait/DSCF2664.jpg",
+    "/photography/patagonia/portrait/DSCF2666.jpg",
+    "/photography/patagonia/portrait/DSCF2692.jpg",
+    "/photography/patagonia/portrait/DSCF2696.jpg",
+    "/photography/patagonia/portrait/DSCF2758.jpg",
+    "/photography/patagonia/portrait/DSCF2765.jpg"
   ];
 
   const openModal = (index: number) => {
@@ -161,8 +236,8 @@ export default function Photos() {
               <Image
                 priority
                 src={src}
-                width={700}
-                height={475}
+                width={1111}
+                height={1667}
                 sizes="100vw"
                 alt={`Image ${index + 1}`}
                 className="rounded-sm object-cover cursor-pointer"
@@ -180,8 +255,8 @@ export default function Photos() {
                       <Image
                         src={src}
                         alt={`Carousel Image ${index + 1}`}
-                        width={2400}
-                        height={1605}
+                        width={1111}
+                        height={1667}
                         sizes="100vw"
                         className="rounded-sm object-cover rounded-xl w-fit h-full max-h-[81vh]"
                       />

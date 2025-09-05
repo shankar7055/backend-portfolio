@@ -14,14 +14,14 @@ export default function Home() {
         <p> Laureate is a global leader in higher education with more than 70 educational institutions and 1 million students in the Americas, Europe, Asia, Africa, and the Middle East. </p>
         <p> I was responsible for the research, interaction design, and copywriting for Laureate, working with two visual designers to redesign the e-commerce experience. </p>
 
-        <ImageComponent src="/projects/laureate/Laureate-Home-p-1080.png" alt="" />
+        <ImageComponent width={1280} height={720} src="/projects/laureate/Laureate-Home-p-1080.png" alt="" />
 
         <h2> Conveying Trust of an Education Titan </h2>
         <p> The Laureate company approached us to help them communicate the best of a robust education group and bring out the critical information for people to enroll in online distance learning. </p>
         <p> The project involved redesigning the Laureate e-commerce website and optimizing the enrollment flow of information needed for students in online distance learning. </p>
         <p> With a three-month timeline, we focused on delivering the education experience more effectively and meaningfully. </p>
 
-        <ImageComponent src="/projects/laureate/Overview_Laureate-p-1080.png" alt="" />
+        <ImageComponent width={1280} height={720} src="/projects/laureate/Overview_Laureate-p-1080.png" alt="" />
 
         <h2> Laureate Immersion </h2>
         <p> We started the project by investigating the requirements for online distance learning and the nature of education service provision thoroughly and quickly. As a result, we conducted ethnographic research to understand the three stakeholders’ perspectives in the service with students, institutions managers, and university center owners. </p>
@@ -62,7 +62,7 @@ export default function Home() {
         <p> Before we started to design, it was essential to have a holistic approach to each institution’s enrollment flow and existing content required for the course. </p>
         <p> After we mapped out the workflows, we came up with a single proposal that could improve user experience and optimize the development and maintenance of the flow during a moment of heavy online traffic. </p>
 
-        <ImageComponent src="/projects/laureate/workflow-laureate-p-2000.png" alt="" />
+        <ImageComponent width={1280} height={720} src="/projects/laureate/workflow-laureate-p-2000.png" alt="" />
 
         <p> With the new workflow, Laureate can track information at each step by the user if they abandoned the funnel halfway through, enabling them to send more relevant and personalized information. </p>
         <h2> Introducing Laureate </h2>

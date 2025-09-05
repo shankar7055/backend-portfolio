@@ -39,7 +39,7 @@ export default function Home() {
       if (element) observer.unobserve(element)
     }
 
-  }, [turbulenceRef, options, isVisible])
+  }, [turbulenceRef, options, isVisible, callbackFunction])
 
 
 

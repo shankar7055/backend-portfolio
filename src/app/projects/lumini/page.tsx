@@ -12,19 +12,19 @@ export default function Home() {
         <p>Lumini is an app that helps you learn about your values, skills, and interests while getting in touch with some professions to make a responsible career choice.</p>
         <p> I was responsible for the interaction design, research, and strategy for Lumini, working with two other visual designers to create our app.</p>
         
-        <ImageComponent src="/projects/lumini/home_lumini-p-1080.png" alt="" />
+        <ImageComponent width={2000} height={1433} src="/projects/lumini/home_lumini-p-1080.png" alt="" />
 
         <h2> Empowering Students </h2>
         <p> We have all been there. High school is coming to an end, and we still don't have an answer to the famous question: "What do you want to be when you grow up?". We freeze because, no matter how exciting our options sound, we start to feel claustrophobic as we get closer to making our final decision. </p>
         <p> To understand the scale of this problem, we started looking for quantitative research. We found out that only 41% of students graduate from college in four years. In addition, 30% of students drop out of college after their first year, and 11.6% of students who drop out will transfer and get their degrees elsewhere. </p>
         <p> We aimed to redesign a new career model choice where students can improve their self-knowledge and get in touch with professions, to make a responsible and confident decision. </p>
 
-        <ImageComponent src="/projects/lumini/Overview_lumini-p-2000.png" alt="" />
+        <ImageComponent width={2000} height={1433} src="/projects/lumini/Overview_lumini-p-2000.png" alt="" />
 
         <h2> Gathering Information </h2>
         <p> At the start of the project, we didn't have a defined scope or specific goals for the career choice experience. To ensure we had viable user value and impact, we conducted a series of user research sessions. </p>
 
-        <ImageComponent src="/projects/lumini/group-photo.png" alt="" />
+        <ImageComponent width={2000} height={1433} src="/projects/lumini/group-photo.png" alt="" />
 
         <h2> What does “Career” mean to you? </h2>
         <p> We interviewed five high school and ten undergrad students in São Paulo. We aimed to gather insights into how they feel, perceive, and think about career choices. </p>
@@ -64,7 +64,7 @@ export default function Home() {
         <p>Before we could jump into designing, it was essential to have a holistic understanding of the broader challenges students face and the steps required for a scalable career choice experience.</p>
         <p>After much time buried in the academic research and literature, we unpacked the concept of the perfect career choice experience based on "professional maturity" by Super in 1955 and modeled for the dimensions of Determination, Responsibility, Independence, Self Awareness, and Market Knowledge.</p>
 
-        <ImageComponent src="/projects/lumini/framework-Lumini.png" alt="" />
+        <ImageComponent width={2000} height={1433} src="/projects/lumini/framework-Lumini.png" alt="" />
 
         <p>We established all the principles required for students to raise maturity aiming at their insertion in the professional market with this framework. As a result, we created a simple and effective journey that adjusts to all types of students.</p>
         <h2>Introducing Lumini</h2>

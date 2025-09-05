@@ -272,50 +272,6 @@ const TurbulenceCanvas = forwardRef<TurbulenceCanvasRef, TurbulenceCanvasProps>(
     setPoints([])
   }, [isDrawing, points, strokeColor, strokeWidth])
 
-  // Rendering functions
-  const redrawCurrentStroke = useCallback(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const context = canvas.getContext('2d')
-    if (!context) return
-
-    // Redraw all strokes first
-    redrawAllStrokes()
-
-    if (points.length === 0) return
-
-    context.save()
-    context.strokeStyle = strokeColor
-    context.lineWidth = strokeWidth
-    context.lineCap = 'round'
-    context.lineJoin = 'round'
-
-    if (points.length === 1) {
-      context.fillStyle = strokeColor
-      context.beginPath()
-      const point = points[0]
-      const turbulent = applyTurbulence(point.x, point.y, turbulenceTime)
-      context.arc(turbulent.x, turbulent.y, strokeWidth / 2, 0, Math.PI * 2)
-      context.fill()
-    } else {
-      context.beginPath()
-      const firstPoint = points[0]
-      const firstTurbulent = applyTurbulence(firstPoint.x, firstPoint.y, turbulenceTime)
-      context.moveTo(firstTurbulent.x, firstTurbulent.y)
-
-      for (let i = 1; i < points.length; i++) {
-        const point = points[i]
-        const turbulent = applyTurbulence(point.x, point.y, turbulenceTime)
-        context.lineTo(turbulent.x, turbulent.y)
-      }
-
-      context.stroke()
-    }
-
-    context.restore()
-  }, [points, strokeColor, strokeWidth, applyTurbulence, turbulenceTime])
-
   const redrawAllStrokes = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -364,6 +320,52 @@ const TurbulenceCanvas = forwardRef<TurbulenceCanvasRef, TurbulenceCanvasProps>(
       context.restore()
     }
   }, [allStrokes, applyTurbulence, turbulenceTime, animatedPoints])
+  
+  // Rendering functions
+  const redrawCurrentStroke = useCallback(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const context = canvas.getContext('2d')
+    if (!context) return
+
+    // Redraw all strokes first
+    redrawAllStrokes()
+
+    if (points.length === 0) return
+
+    context.save()
+    context.strokeStyle = strokeColor
+    context.lineWidth = strokeWidth
+    context.lineCap = 'round'
+    context.lineJoin = 'round'
+
+    if (points.length === 1) {
+      context.fillStyle = strokeColor
+      context.beginPath()
+      const point = points[0]
+      const turbulent = applyTurbulence(point.x, point.y, turbulenceTime)
+      context.arc(turbulent.x, turbulent.y, strokeWidth / 2, 0, Math.PI * 2)
+      context.fill()
+    } else {
+      context.beginPath()
+      const firstPoint = points[0]
+      const firstTurbulent = applyTurbulence(firstPoint.x, firstPoint.y, turbulenceTime)
+      context.moveTo(firstTurbulent.x, firstTurbulent.y)
+
+      for (let i = 1; i < points.length; i++) {
+        const point = points[i]
+        const turbulent = applyTurbulence(point.x, point.y, turbulenceTime)
+        context.lineTo(turbulent.x, turbulent.y)
+      }
+
+      context.stroke()
+    }
+
+    context.restore()
+  }, [points, strokeColor, strokeWidth, applyTurbulence, turbulenceTime, redrawAllStrokes])
+
+  
 
   // Animation loop for turbulence
   const startTurbulenceAnimation = useCallback(() => {

@@ -172,7 +172,7 @@ export function WebGLShader() {
       }
       refs.renderer?.dispose()
     }
-  }, [])
+  }, [mousePos.x, mousePos.y])
 
   return (
     <canvas

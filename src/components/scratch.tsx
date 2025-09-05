@@ -38,6 +38,42 @@ const ScratchToReveal: React.FC<ScratchToRevealProps> = ({
       image.src = "/about-me/chess-avatar/chess-cover.png"; // Update this path to your image
     }
   }, []);
+
+  const checkCompletion = () => {
+    if (isComplete) return; // Check if already completed
+ 
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (canvas && ctx) {
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const pixels = imageData.data;
+      const totalPixels = pixels.length / 4;
+      let clearPixels = 0;
+ 
+      for (let i = 3; i < pixels.length; i += 4) {
+        if (pixels[i] === 0) clearPixels++;
+      }
+ 
+      const percentage = (clearPixels / totalPixels) * 100;
+ 
+      if (percentage >= minScratchPercentage) {
+        setIsComplete(true); // Set complete flag
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas to reveal everything
+        
+        // Hide the canvas to allow clicks to pass through
+        if (canvas) {
+          canvas.style.pointerEvents = 'none';
+          canvas.style.opacity = '0';
+        }
+        
+        startAnimation();
+        if (onComplete) {
+          onComplete();
+        }
+      }
+    }
+  };
+  
  
   useEffect(() => {
     const handleDocumentMouseMove = (event: MouseEvent) => {
@@ -78,7 +114,7 @@ const ScratchToReveal: React.FC<ScratchToRevealProps> = ({
       document.removeEventListener("touchend", handleDocumentTouchEnd);
       document.removeEventListener("touchcancel", handleDocumentTouchEnd);
     };
-  }, [isScratching]);
+  }, [isScratching, checkCompletion]);
  
   const handleMouseDown = () => setIsScratching(true);
  
@@ -98,40 +134,7 @@ const ScratchToReveal: React.FC<ScratchToRevealProps> = ({
     }
   };
  
-  const checkCompletion = () => {
-    if (isComplete) return; // Check if already completed
- 
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
-    if (canvas && ctx) {
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const pixels = imageData.data;
-      const totalPixels = pixels.length / 4;
-      let clearPixels = 0;
- 
-      for (let i = 3; i < pixels.length; i += 4) {
-        if (pixels[i] === 0) clearPixels++;
-      }
- 
-      const percentage = (clearPixels / totalPixels) * 100;
- 
-      if (percentage >= minScratchPercentage) {
-        setIsComplete(true); // Set complete flag
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas to reveal everything
-        
-        // Hide the canvas to allow clicks to pass through
-        if (canvas) {
-          canvas.style.pointerEvents = 'none';
-          canvas.style.opacity = '0';
-        }
-        
-        startAnimation();
-        if (onComplete) {
-          onComplete();
-        }
-      }
-    }
-  };
+
  
   const startAnimation = () => {
     controls.start({

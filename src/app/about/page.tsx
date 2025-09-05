@@ -50,7 +50,7 @@ export default function About() {
       if (element) observer.unobserve(element)
     }
 
-  }, [turbulenceRef, options, isVisible])
+  }, [turbulenceRef, options, isVisible, callbackFunction])
 
 
   const draggableImages = [

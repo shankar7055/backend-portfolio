@@ -1,6 +1,5 @@
 import { ThemeProvider } from "@/components/theme-provider"
 import { AlbumProvider } from "@/components/ui/album"
-import { MediaPlayer } from "@/components/ui/media-player"
 import type { Metadata } from "next";
 import localFont from 'next/font/local'
 import { Kalam } from 'next/font/google'
@@ -83,12 +82,7 @@ f="XMLHttpRequest",g._w={},g._w[f]=m[f],g._w[s]=m[s],m[s]&&(m[s]=function(){retu
 
             {children}
 
-            <div className="flex flex-col gap-4 w-full h-fit">
-
-              <MediaPlayer />
-              <Dock footerClassName="fixed bottom-6 z-10 left-6 right-6 overflow-x-auto sm:overflow-visible rounded-2xl max-w-fit bg-component border mx-auto shadow-[_0_1px_1px_-0.5px_rgba(0,0,0,0.04),_0_3px_3px_-1.5px_rgba(0,0,0,0.04),_0_12px_12px_-6px_rgba(0,0,0,0.04)]"></Dock>
-              
-            </div>
+            <Dock></Dock>
           </AlbumProvider>
         </ThemeProvider>
       </body>

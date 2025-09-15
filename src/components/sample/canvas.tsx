@@ -283,9 +283,6 @@ const TurbulenceCanvas = forwardRef<TurbulenceCanvasRef, TurbulenceCanvasProps>(
     const context = canvas.getContext('2d')
     if (!context) return
 
-    // Redraw all strokes first
-    redrawAllStrokes()
-
     if (points.length === 0) return
 
     context.save()
@@ -379,10 +376,9 @@ const TurbulenceCanvas = forwardRef<TurbulenceCanvasRef, TurbulenceCanvasProps>(
         setTurbulenceTime(prev => prev + 25)
 
         if (allStrokes.length > 0 || isDrawing) {
+          redrawAllStrokes()
           if (isDrawing) {
             redrawCurrentStroke()
-          } else {
-            redrawAllStrokes()
           }
         }
       }

@@ -3,7 +3,7 @@
 import { CraftBlock } from "@/components/ui/craft-block";
 import Sampledock from "@/components/sample/dock";
 import SampleFlipClock from "@/components/sample/clock";
-import { Book } from "@/components/book/book";
+import { Book } from "@/components/sample/book";
 import TurbulenceCanvas, { TurbulenceCanvasRef } from "@/components/sample/canvas";
 import { Album } from "@/components/sample/album";
 import { useState, useEffect, useRef } from "react";
@@ -13,38 +13,36 @@ export default function Home() {
   const turbulenceRef = useRef<TurbulenceCanvasRef>(null)
   const [isVisible, setIsVisible] = useState(false)
 
-  const callbackFunction = (entries: IntersectionObserverEntry[]) => {
-    const [entry] = entries
-    const wasVisible = isVisible
-    setIsVisible(entry.isIntersecting)
-
-    // Trigger animation when becoming visible for the first time
-    if (!wasVisible && entry.isIntersecting && turbulenceRef.current) {
-      turbulenceRef.current.startHelloAnimation()
-    }
-  }
-
-  const options = {
-    root: null,
-    rootMargin: "0px",
-    threshold: 0.4
-  }
-
   useEffect(() => {
-    const observer = new IntersectionObserver(callbackFunction, options)
+    const callbackFunction = (entries: IntersectionObserverEntry[]) => {
+      const [entry] = entries
+      setIsVisible(prev => {
+        const wasVisible = prev
+        if (!wasVisible && entry.isIntersecting && turbulenceRef.current) {
+          turbulenceRef.current.startHelloAnimation()
+        }
+        return entry.isIntersecting
+      })
+    }
+
+    const observer = new IntersectionObserver(callbackFunction, {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.4
+    })
+
     const element = turbulenceRef.current?.getElement()
     if (element) observer.observe(element)
 
     return () => {
       if (element) observer.unobserve(element)
     }
-
-  }, [turbulenceRef, options, isVisible, callbackFunction])
+  }, [])
 
 
 
   return (
-    <main className="pt:10 flex max-w-[1400px] flex-col items-center justify-center gap-20 p-6 md:mx-auto md:gap-56 md:p-5 md:pt-12">
+    <main className="flex max-w-[1400px] flex-col items-center justify-center gap-20 p-6 pb-20 md:mx-auto md:gap-56 md:p-5 md:pt-12 md:pb-40">
       <div className="flex w-full flex-col gap-24 md:gap-32">
 
         <CraftBlock
@@ -91,7 +89,7 @@ export default function Home() {
         <CraftBlock
           title="Music Album Player"
           description="Interactive vinyl album with play/pause functionality and spinning animation"
-          badges={["audio", "animation", "react", "css"]}
+          badges={["animation", "react", "css"]}
 
         >
           <Album

@@ -28,7 +28,7 @@ const ScratchToReveal: React.FC<ScratchToRevealProps> = ({
  
   useEffect(() => {
     const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
+    const ctx = canvas?.getContext("2d", { willReadFrequently: true });
     if (canvas && ctx) {
       // Load and draw background image
       const image = new Image();
@@ -39,43 +39,51 @@ const ScratchToReveal: React.FC<ScratchToRevealProps> = ({
     }
   }, []);
 
-  const checkCompletion = () => {
-    if (isComplete) return; // Check if already completed
- 
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
-    if (canvas && ctx) {
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const pixels = imageData.data;
-      const totalPixels = pixels.length / 4;
-      let clearPixels = 0;
- 
-      for (let i = 3; i < pixels.length; i += 4) {
-        if (pixels[i] === 0) clearPixels++;
-      }
- 
-      const percentage = (clearPixels / totalPixels) * 100;
- 
-      if (percentage >= minScratchPercentage) {
-        setIsComplete(true); // Set complete flag
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas to reveal everything
-        
-        // Hide the canvas to allow clicks to pass through
-        if (canvas) {
-          canvas.style.pointerEvents = 'none';
-          canvas.style.opacity = '0';
-        }
-        
-        startAnimation();
-        if (onComplete) {
-          onComplete();
-        }
-      }
-    }
-  };
-  
  
   useEffect(() => {
+    const checkCompletion = () => {
+      if (isComplete) return; // Check if already completed
+   
+      const canvas = canvasRef.current;
+      const ctx = canvas?.getContext("2d", { willReadFrequently: true });
+      if (canvas && ctx) {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = imageData.data;
+        const totalPixels = pixels.length / 4;
+        let clearPixels = 0;
+   
+        for (let i = 3; i < pixels.length; i += 4) {
+          if (pixels[i] === 0) clearPixels++;
+        }
+   
+        const percentage = (clearPixels / totalPixels) * 100;
+   
+        if (percentage >= minScratchPercentage) {
+          setIsComplete(true); // Set complete flag
+          ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas to reveal everything
+          
+          // Hide the canvas to allow clicks to pass through
+          if (canvas) {
+            canvas.style.pointerEvents = 'none';
+            canvas.style.opacity = '0';
+          }
+
+          const startAnimation = () => {
+            controls.start({
+              scale: [1, 1.5, 1],
+              rotate: [0, 10, -10, 10, -10, 0],
+              transition: { duration: 0.5 },
+            });
+          }
+          
+          startAnimation();
+          if (onComplete) {
+            onComplete();
+          }
+        }
+      }
+    };
+
     const handleDocumentMouseMove = (event: MouseEvent) => {
       if (!isScratching) return;
       scratch(event.clientX, event.clientY);
@@ -114,7 +122,7 @@ const ScratchToReveal: React.FC<ScratchToRevealProps> = ({
       document.removeEventListener("touchend", handleDocumentTouchEnd);
       document.removeEventListener("touchcancel", handleDocumentTouchEnd);
     };
-  }, [isScratching, checkCompletion]);
+  }, [isScratching, isComplete, minScratchPercentage, onComplete, controls]);
  
   const handleMouseDown = () => setIsScratching(true);
  
@@ -122,7 +130,7 @@ const ScratchToReveal: React.FC<ScratchToRevealProps> = ({
  
   const scratch = (clientX: number, clientY: number) => {
     const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
+    const ctx = canvas?.getContext("2d", { willReadFrequently: true });
     if (canvas && ctx) {
       const rect = canvas.getBoundingClientRect();
       const x = clientX - rect.left + 16; // offset to position the scratched circle with cursor
@@ -135,14 +143,6 @@ const ScratchToReveal: React.FC<ScratchToRevealProps> = ({
   };
  
 
- 
-  const startAnimation = () => {
-    controls.start({
-      scale: [1, 1.5, 1],
-      rotate: [0, 10, -10, 10, -10, 0],
-      transition: { duration: 0.5 },
-    });
-  };
  
   return (
     <motion.div

@@ -5,8 +5,9 @@ import { useEffect, useMemo } from "react"
 import { motion } from "framer-motion"
 import useSound from "use-sound"
 import { cn } from "@/lib/utils"
-import { useAlbumContext } from "@/components/ui/album-context"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
+import Image from "next/image"
+import { useAlbumContext } from "@/components/ui/album-context"
 
 interface AlbumProps extends React.HTMLAttributes<HTMLDivElement> {
   albumCover: string
@@ -18,7 +19,7 @@ interface AlbumProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Album = React.forwardRef<HTMLDivElement, AlbumProps>(
   ({ className, albumCover, albumTitle, artist, musicFile, size = "md", ...props }, ref) => {
-    const { currentPlayingId, setCurrentPlayingId, setCurrentTrack, setCurrentSound, volume } = useAlbumContext()
+    const { currentPlayingId, setCurrentPlayingId, setCurrentTrack, setCurrentSound, volume, isSoundEnabled } = useAlbumContext()
 
     // Create a unique ID for this album instance
     const albumId = useMemo(() =>
@@ -28,14 +29,18 @@ const Album = React.forwardRef<HTMLDivElement, AlbumProps>(
 
     const isPlaying = currentPlayingId === albumId
 
-    const [play, { stop }] = useSound(musicFile, {
-      volume: volume,
-      onend: () => {
-        setCurrentPlayingId(null)
-        setCurrentTrack(null)
-        setCurrentSound(null)
-      },
-    })
+    const [play, { stop }] = useSound(
+      isSoundEnabled ? musicFile : '', // Empty string when disabled
+      {
+        volume: volume,
+        soundEnabled: isSoundEnabled,
+        onend: () => {
+          setCurrentPlayingId(null)
+          setCurrentTrack(null)
+          setCurrentSound(null)
+        },
+      }
+    )
 
     // Register this sound when it becomes the current playing track
     useEffect(() => {
@@ -51,19 +56,37 @@ const Album = React.forwardRef<HTMLDivElement, AlbumProps>(
       }
     }, [currentPlayingId, albumId, stop])
 
+    // Stop music when sound is disabled
+    useEffect(() => {
+      if (!isSoundEnabled && isPlaying) {
+        // Force stop the audio immediately
+        stop()
+        setCurrentPlayingId(null)
+        setCurrentTrack(null)
+        setCurrentSound(null)
+      }
+    }, [isSoundEnabled, isPlaying, stop, setCurrentPlayingId, setCurrentTrack, setCurrentSound])
+
     const handleClick = () => {
       if (isPlaying) {
         stop()
         setCurrentPlayingId(null)
         setCurrentTrack(null)
-      } else {
+      } else if (isSoundEnabled) {
+        // Only play if sound is enabled
         // Stop any currently playing album
         if (currentPlayingId) {
           stop()
         }
         play()
         setCurrentPlayingId(albumId)
-       
+        setCurrentTrack({
+          id: albumId,
+          albumTitle,
+          artist,
+          albumCover,
+          musicFile
+        })
       }
     }
 
@@ -104,10 +127,12 @@ const Album = React.forwardRef<HTMLDivElement, AlbumProps>(
 
             {/* Center label with album cover */}
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-red-800 overflow-hidden border-2 border-red-900">
-              <img
+              <Image
                 src={albumCover}
                 alt={`${albumTitle} center`}
                 className="w-full h-full object-cover"
+                width={80}
+                height={80}
               />
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-black/50" />
             </div>
@@ -122,10 +147,12 @@ const Album = React.forwardRef<HTMLDivElement, AlbumProps>(
                 animate={{ x: isPlaying ? "45%" : 0 }}
                 transition={{ duration: 0.6, ease: "easeInOut" }}
               >
-                <img
+                <Image
                   src={albumCover}
                   alt={`${albumTitle} by ${artist}`}
                   className="w-full h-full object-cover"
+                  width={216}
+                  height={216}
                 />
 
                 {/* Overlay for better vinyl visibility when playing */}
@@ -137,6 +164,12 @@ const Album = React.forwardRef<HTMLDivElement, AlbumProps>(
                 />
               </motion.div>
             </HoverCardTrigger>
+            <HoverCardContent sideOffset={8}>
+              <div className="text-center">
+                <p className="font-medium">{albumTitle}</p>
+                <p className="text-xs text-muted-foreground">{artist}</p>
+              </div>
+            </HoverCardContent>
           </HoverCard>
         </div>
       </div>
@@ -147,4 +180,3 @@ const Album = React.forwardRef<HTMLDivElement, AlbumProps>(
 Album.displayName = "Album"
 
 export { Album }
-export { AlbumProvider } from "@/components/ui/album-context"

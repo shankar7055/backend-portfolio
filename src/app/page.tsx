@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Twitter, Linkedin, Github, Mail } from "@/components/icons";
 
 
-export default function About() {
+export default function Home() {
 
   const turbulenceRef = useRef<TurbulenceCanvasRef>(null)
   const hasTriggeredRef = useRef(false)

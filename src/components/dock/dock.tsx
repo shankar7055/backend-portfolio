@@ -34,7 +34,6 @@ import { useSound } from "use-sound";
 import { MotionLink } from "./customMotionComponent";
 import WebGLRaymarching from "@/components/shaders/web-gl-shader3";
 import { useAlbumContext } from "@/components/ui/album-context";
-import Goo from "@/components/ui/goo";
 import { X, Play, Pause, Volume2, VolumeX, Volume1 } from "lucide-react"
 import Image from "next/image"
 
@@ -98,8 +97,6 @@ export default function Dock() {
     return false;
   };
 
-
-
   const [isSoundEnabled, setIsSoundEnabled] = useState(!isMobile());
 
   const [playDarkSound] = useSound("/sounds/darkmode.wav", {
@@ -147,153 +144,153 @@ export default function Dock() {
 
   return (
     <div className="w-full px-4 fixed flex flex-col gap-2 items-center rounded-lg bottom-4 left-1/2 -translate-x-1/2 max-w-fit" >
-        {pathname === "/" && (
-          <div className="bg-component w-fit font-medium text-sm px-3 py-1.5 rounded-2xl flex gap-2 z-20 pointer-events-none items-center whitespace-nowrap animate-bounce">
-            <ArrowUpDownLeftRight className="size-5"></ArrowUpDownLeftRight>
-            Drag to move
-          </div>
-        )}
-      
-      <Goo composite intensity="weak" className="w-full flex flex-col items-center gap-4">
-        <AnimatePresence>
-          {currentTrack && (
-            <motion.div
-              initial={{
-                scaleX: 0.20,
-                x: 0,
-              }}
-              animate={{
-                scaleX: 1,
-                x: -370,
-              }}
-              exit={{
-                x: 0,
+      {pathname === "/" && (
+        <div className="bg-component w-fit font-medium text-sm px-3 py-1.5 rounded-2xl flex gap-2 z-20 pointer-events-none items-center whitespace-nowrap animate-bounce">
+          <ArrowUpDownLeftRight className="size-5"></ArrowUpDownLeftRight>
+          Drag to move
+        </div>
+      )}
 
-                transition: {
-                  x: {
-                    type: "spring",
-                    duration: 0.8,
-                    bounce: 0,
-                  }
-                }
-              }}
-              transition={{
+
+      <AnimatePresence>
+        {currentTrack && (
+          <motion.div
+            initial={{
+              scaleX: 0.20,
+              x: 0,
+            }}
+            animate={{
+              scaleX: 1,
+              x: -370,
+            }}
+            exit={{
+              x: 0,
+
+              transition: {
                 x: {
                   type: "spring",
-                  duration: 0.6,
-                  bounce: 0
-                },
-                scaleX: {
-                  type: "spring",
-                  duration: 0.4,
-                  bounce: 0.1,
+                  duration: 0.8,
+                  bounce: 0,
+                }
+              }
+            }}
+            transition={{
+              x: {
+                type: "spring",
+                duration: 0.6,
+                bounce: 0
+              },
+              scaleX: {
+                type: "spring",
+                duration: 0.4,
+                bounce: 0.1,
+              }
+            }}
+
+            className={`h-[56px] bottom-0 absolute rounded-2xl overflow-hidden bg-component border max-w-fit origin-right shadow-[_0_1px_1px_-0.5px_rgba(0,0,0,0.04),_0_3px_3px_-1.5px_rgba(0,0,0,0.04),_0_12px_12px_-6px_rgba(0,0,0,0.04)]`}
+          >
+
+            <motion.div
+              className="flex items-center gap-3 p-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{
+                opacity: 0,
+
+                transition: {
+                  opacity: {
+                    duration: 0.1,
+                  }
                 }
               }}
-
-              className={`absolute h-full rounded-2xl overflow-hidden bg-component max-w-fit origin-right shadow-[_0_1px_1px_-0.5px_rgba(0,0,0,0.04),_0_3px_3px_-1.5px_rgba(0,0,0,0.04),_0_12px_12px_-6px_rgba(0,0,0,0.04)]`}
+              transition={{ delay: 0.4, duration: 0.3 }}
             >
+              {/* Album Cover */}
+              <div className="relative w-10 h-10 rounded-lg overflow-hidden">
+                <Image
+                  src={currentTrack.albumCover}
+                  alt={currentTrack.albumTitle}
+                  fill
+                  className="object-cover"
+                  sizes="md"
+                />
+                <motion.div
+                  className="absolute inset-0 bg-black/20"
+                  animate={{ opacity: isPlaying ? 0.3 : 0 }}
+                  exit={{
+                    opacity: 0
+                  }}
+                />
+              </div>
 
-              <motion.div
-                className="flex items-center gap-3 p-2"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{
-                  opacity: 0,
+              {/* Track Info */}
+              <div className="flex flex-col h-10 w-32">
+                <p className="text-sm font-medium truncate">
+                  {currentTrack.albumTitle}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {currentTrack.artist}
+                </p>
+              </div>
 
-                  transition: {
-                    opacity: {
-                      duration: 0.1,
-                    }
-                  }
-                }}
-                transition={{ delay: 0.4, duration: 0.3 }}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleClose}
+                className="w-10 h-10"
               >
-                {/* Album Cover */}
-                <div className="relative w-10 h-10 rounded-lg overflow-hidden">
-                  <Image
-                    src={currentTrack.albumCover}
-                    alt={currentTrack.albumTitle}
-                    fill
-                    className="object-cover"
-                    sizes="md"
-                  />
-                  <motion.div
-                    className="absolute inset-0 bg-black/20"
-                    animate={{ opacity: isPlaying ? 0.3 : 0 }}
-                    exit={{
-                      opacity: 0
-                    }}
-                  />
-                </div>
+                <StopCircle className="w-6 h-6" />
+              </Button>
 
-                {/* Track Info */}
-                <div className="flex flex-col h-10 w-32">
-                  <p className="text-sm font-medium truncate">
-                    {currentTrack.albumTitle}
-                  </p>
-                  <p className="text-xs text-muted-foreground truncate">
-                    {currentTrack.artist}
-                  </p>
-                </div>
-
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleClose}
-                  className="w-10 h-10"
-                >
-                  <StopCircle className="w-6 h-6" />
-                </Button>
-
-              </motion.div>
             </motion.div>
-          )}
-        </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
 
 
-        <motion.div
-          initial={{}}
-          animate={{
-            x: currentTrack ? 0 : 0
-          }}
-          exit={{}}
-          transition={{
-            x: {
-              type: "spring",
-              duration: 0.6,
-              bounce: 0,
-            },
-          }}
+      <motion.div
+        initial={{}}
+        animate={{
+          x: currentTrack ? 0 : 0
+        }}
+        exit={{}}
+        transition={{
+          x: {
+            type: "spring",
+            duration: 0.6,
+            bounce: 0,
+          },
+        }}
 
-          className="w-full px-2 py-2 bg-component scrollbar-none overflow-y-hidden overflow-x-auto sm:overflow-visible rounded-2xl w-fit flex h-[3.5rem] items-center gap-2 relative z-10 shadow-[_0_1px_1px_-0.5px_rgba(0,0,0,0.04),_0_3px_3px_-1.5px_rgba(0,0,0,0.04),_0_12px_12px_-6px_rgba(0,0,0,0.04)]"
+        className="w-full px-2 py-2 bg-component border scrollbar-none overflow-y-hidden overflow-x-auto sm:overflow-visible rounded-2xl w-fit flex h-[3.5rem] items-center gap-2 relative z-10 shadow-[_0_1px_1px_-0.5px_rgba(0,0,0,0.04),_0_3px_3px_-1.5px_rgba(0,0,0,0.04),_0_12px_12px_-6px_rgba(0,0,0,0.04)]"
 
-        >
-          <AppIcon
-            href="/"
-            ariaLabel="Home"
-            isActive={pathname === "/"}
-            FilledIcon={HomeFilled}
-            OutlinedIcon={HomeOutlined}
-            onClick={handleClick}
-          />
-          <AppIcon
-            href="/projects"
-            ariaLabel="Projects"
-            isActive={pathname.startsWith("/projects")}
-            FilledIcon={CubeFilled}
-            OutlinedIcon={CubeOutlined}
-            onClick={handleClick}
-          />
-          <AppIcon
-            href="/craft"
-            ariaLabel="Craft"
-            isActive={pathname.startsWith("/craft")}
-            FilledIcon={CraftFilled}
-            OutlinedIcon={CraftOutlined}
-            onClick={handleClick}
-          />
-          {/*}
+      >
+        <AppIcon
+          href="/"
+          ariaLabel="Home"
+          isActive={pathname === "/"}
+          FilledIcon={HomeFilled}
+          OutlinedIcon={HomeOutlined}
+          onClick={handleClick}
+        />
+        <AppIcon
+          href="/projects"
+          ariaLabel="Projects"
+          isActive={pathname.startsWith("/projects")}
+          FilledIcon={CubeFilled}
+          OutlinedIcon={CubeOutlined}
+          onClick={handleClick}
+        />
+        <AppIcon
+          href="/craft"
+          ariaLabel="Craft"
+          isActive={pathname.startsWith("/craft")}
+          FilledIcon={CraftFilled}
+          OutlinedIcon={CraftOutlined}
+          onClick={handleClick}
+        />
+        {/*}
           <AppIcon
             href="/about"
             ariaLabel="About"
@@ -303,51 +300,50 @@ export default function Dock() {
             onClick={handleClick}
           />
           {*/}
-          <AppIcon
-            href="/notes"
-            ariaLabel="Notes"
-            isActive={pathname.startsWith("/notes")}
-            FilledIcon={NotebookFilled}
-            OutlinedIcon={NotebookOutlined}
+        <AppIcon
+          href="/notes"
+          ariaLabel="Notes"
+          isActive={pathname.startsWith("/notes")}
+          FilledIcon={NotebookFilled}
+          OutlinedIcon={NotebookOutlined}
+          onClick={handleClick}
+        />
+        <AppIcon
+          href="/photos"
+          ariaLabel="Photos"
+          isActive={pathname.startsWith("/photos")}
+          FilledIcon={CameraFilled}
+          OutlinedIcon={CameraOutlined}
+          onClick={handleClick}
+        />
+
+        {isChessPage && (
+          <ChessAppIcon
+            href="/chess"
+            ariaLabel="Secret Stage"
             onClick={handleClick}
           />
-          <AppIcon
-            href="/photos"
-            ariaLabel="Photos"
-            isActive={pathname.startsWith("/photos")}
-            FilledIcon={CameraFilled}
-            OutlinedIcon={CameraOutlined}
-            onClick={handleClick}
-          />
+        )}
 
-          {isChessPage && (
-            <ChessAppIcon
-              href="/chess"
-              ariaLabel="Secret Stage"
-              onClick={handleClick}
-            />
-          )}
+        <Separator className="mx-1.5" orientation="vertical" />
 
-          <Separator className="mx-1.5" orientation="vertical" />
+        <ModeToggle
+          handleClick={handleThemeClick}
+          FilledIcon={Sun}
+          OutlinedIcon={Moon}
+          ariaLabel="Toggle Theme"
+          isActive={theme === "dark"}
+        />
 
-          <ModeToggle
-            handleClick={handleThemeClick}
-            FilledIcon={Sun}
-            OutlinedIcon={Moon}
-            ariaLabel="Toggle Theme"
-            isActive={theme === "dark"}
-          />
-
-          <ModeToggle
-            handleClick={handleAudioClick}
-            FilledIcon={VolumeOnline}
-            OutlinedIcon={VolumeMuted}
-            ariaLabel="Toggle Audio"
-            isActive={isSoundEnabled}
-            className="audio-toggle-button"
-          />
-        </motion.div>
-      </Goo>
+        <ModeToggle
+          handleClick={handleAudioClick}
+          FilledIcon={VolumeOnline}
+          OutlinedIcon={VolumeMuted}
+          ariaLabel="Toggle Audio"
+          isActive={isSoundEnabled}
+          className="audio-toggle-button"
+        />
+      </motion.div>
     </div>
   );
 }

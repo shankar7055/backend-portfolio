@@ -92,14 +92,7 @@ export default function Sampledock({ footerClassName }: DockProps = {}) {
           OutlinedIcon={CraftOutlined}
           onClick={handleClick}
         />
-        <AppIcon
-          id="about"
-          ariaLabel="About"
-          isActive={activeItem === "about"}
-          FilledIcon={UserFilled}
-          OutlinedIcon={UserOutlined}
-          onClick={handleClick}
-        />
+
         <AppIcon
           id="notes"
           ariaLabel="Notes"

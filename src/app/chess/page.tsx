@@ -12,9 +12,50 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Flag, RotateCcw, Undo2 } from 'lucide-react';
 
+// Sound system hook
+function useChessSound() {
+    const playSound = (soundType: 'move' | 'capture' | 'check' | 'promote' | 'castle' | 'move-computer') => {
+        try {
+            let audioPath = '';
+            switch (soundType) {
+                case 'move':
+                    audioPath = '/about-me/chess-sounds/move-self.mp3';
+                    break;
+                case 'move-computer':
+                    audioPath = '/about-me/chess-sounds/move-opponent.mp3';
+                    break;
+                case 'capture':
+                    audioPath = '/about-me/chess-sounds/capture.mp3';
+                    break;
+                case 'check':
+                    audioPath = '/about-me/chess-sounds/move-check.mp3';
+                    break;
+                case 'castle':
+                    audioPath = '/about-me/chess-sounds/castle.mp3';
+                    break;
+                case 'promote':
+                    audioPath = '/sounds/promote.mp3';
+                    break;
+                default:
+                    audioPath = '/about-me/chess-sounds/move-self.mp3';
+            }
+
+            const audio = new Audio(audioPath);
+            audio.volume = 0.3; // Adjust volume as needed
+            audio.currentTime = 0; // Reset to beginning
+            audio.play().catch(e => console.log('Audio play failed:', e));
+
+        } catch (error) {
+            console.log('Sound error:', error);
+        }
+    };
+
+    return { playSound };
+}
+
 export default function About() {
 
-
+    const { playSound } = useChessSound();
     const chessGameRef = useRef(new Chess());
     const [chessPosition, setChessPosition] = useState(chessGameRef.current.fen());
     const stockfishRef = useRef<Worker | null>(null);
@@ -27,6 +68,7 @@ export default function About() {
     const [avatarState, setAvatarState] = useState<'wave' | 'thinking' | 'happy' | 'illegal'>('wave');
     const [lastIllegalMove, setLastIllegalMove] = useState<{ from: string, to: string } | null>(null);
     const [positionEval, setPositionEval] = useState<number>(0);
+    const promotionPieceRef = useRef<string | null>(null);
 
     const [capturedByWhite, setCapturedByWhite] = useState<string[]>([]);
     const [capturedByBlack, setCapturedByBlack] = useState<string[]>([]);
@@ -289,6 +331,179 @@ export default function About() {
         }
     }
 
+    // Handle user move
+    function onPieceDrop(sourceSquare: string, targetSquare: string, piece: Piece) {
+        if (waitingForBot) return false;
+
+        let move;
+
+        try {
+            move = chessGameRef.current.move({
+                from: sourceSquare,
+                to: targetSquare,
+                ...(promotionPieceRef.current && { promotion: promotionPieceRef.current })
+            });
+
+            if (!move) {
+                return false;
+            }
+
+            // Clear promotion piece and illegal move state after successful move
+            promotionPieceRef.current = null;
+            setAvatarState('thinking');
+            setLastIllegalMove(null);
+
+            // Play sound based on priority: check > castle > capture > move
+            if (chessGameRef.current.inCheck()) {
+                playSound('check');
+            } else if (move.isKingsideCastle() || move.isQueensideCastle()) {
+                playSound('castle');
+            } else if (move.captured) {
+                playSound('capture');
+            } else {
+                playSound('move');
+            }
+
+            updateCapturedPieces(move);
+
+            setChessPosition(chessGameRef.current.fen());
+            setMoveHistory(chessGameRef.current.history());
+            setCurrentOpening(findOpeningByPGN());
+            extractMovesFromPGN(chessGameRef.current.pgn())
+
+            setTimeout(makeStockfishMove, 200);
+            return true;
+
+
+        } catch (error) {
+            setLastIllegalMove({ from: sourceSquare, to: targetSquare });
+            setAvatarState('illegal');
+            return false;
+        }
+    }
+
+    // Ask Stockfish for a move and play it
+    function makeStockfishMove() {
+        if (!stockfishRef.current) return;
+
+        setWaitingForBot(true);
+
+        stockfishRef.current.postMessage('position fen ' + chessGameRef.current.fen());
+        stockfishRef.current.postMessage('go depth 20');
+        stockfishRef.current.onmessage = (event) => {
+
+            // Parse evaluation from Stockfish output
+            const evalMatch = event.data.match(/score cp (-?\d+)/);
+            if (evalMatch) {
+                const centipawns = parseInt(evalMatch[1]);
+                setPositionEval(centipawns);
+            }
+
+            const match = event.data.match(/bestmove ([a-h][1-8][a-h][1-8][qrbn]?)/);
+            if (match) {
+                // Check if the game is still in progress before making a move
+                if (chessGameRef.current.isGameOver() || gameStatus.includes('resigned')) {
+                    setWaitingForBot(false);
+                    return;
+                }
+
+                const move = chessGameRef.current.move({
+                    from: match[1].slice(0, 2),
+                    to: match[1].slice(2, 4),
+                    promotion: match[1][4]
+                });
+
+                if (!move) {
+                    console.error('Illegal move attempted:');
+                    return false;
+                }
+
+                // Play sound based on priority: check > castle > capture > move-computer
+                if (chessGameRef.current.inCheck()) {
+                    playSound('check');
+                } else if (move.isKingsideCastle() || move.isQueensideCastle()) {
+                    playSound('castle');
+                } else if (move.captured) {
+                    playSound('capture');
+                } else {
+                    playSound('move-computer');
+                }
+
+                updateCapturedPieces(move);
+                setChessPosition(chessGameRef.current.fen());
+                setMoveHistory(chessGameRef.current.history());
+                setCurrentOpening(findOpeningByPGN());
+                extractMovesFromPGN(chessGameRef.current.pgn())
+
+                // Only set waiting to false when we actually get the best move
+                setWaitingForBot(false);
+            }
+        };
+    }
+
+    // Handle promotion piece selection
+    function onPromotionPieceSelect(piece?: string, promoteFromSquare?: string, promoteToSquare?: string) {
+        if (!piece || !promoteFromSquare || !promoteToSquare) return false;
+
+        const promotionPiece = piece.toLowerCase().slice(1);
+        promotionPieceRef.current = promotionPiece;
+
+        return true;
+    }
+
+    // Resign function
+    function handleResign() {
+        const game = chessGameRef.current;
+
+        if (chessGameRef.current.history.length == 0) {
+            return
+        }
+
+        // Stop Stockfish worker immediately to prevent memory errors
+        if (stockfishRef.current) {
+            stockfishRef.current.postMessage('stop');
+            stockfishRef.current.postMessage('ucinewgame');
+            stockfishRef.current.postMessage('isready');
+        }
+
+        setGameStatus('You resigned - Computer wins!');
+        setWaitingForBot(false);
+
+        // Update the position to trigger re-render
+        setChessPosition(game.fen());
+    }
+
+    // Undo function
+    function handleUndo() {
+        if (waitingForBot) return;
+        const game = chessGameRef.current;
+        if (game.history().length >= 2) {
+            game.undo(); // Undo computer move
+            game.undo(); // Undo player move
+            setChessPosition(game.fen());
+            setMoveHistory(game.history());
+        }
+    }
+
+    // New Game function
+    function handleNewGame() {
+
+        // Inform Stockfish of the new game
+        if (stockfishRef.current) {
+            stockfishRef.current.postMessage('stop');
+            stockfishRef.current.postMessage('ucinewgame');
+            stockfishRef.current.postMessage('isready');
+        }
+
+        chessGameRef.current = new Chess();
+        setChessPosition(chessGameRef.current.fen());
+        setMoveHistory([]);
+        setGameStatus('Game in progress');
+        setWaitingForBot(false);
+        setCapturedByWhite([]);
+        setCapturedByBlack([]);
+    }
+
     // Component to display captured pieces using SVG
     function CapturedPieces({ pieces, isWhiteCaptures }: { pieces: string[], isWhiteCaptures: boolean }) {
         const getPieceSvg = (piece: string) => {
@@ -318,27 +533,17 @@ export default function About() {
 
         // Check for illegal move first
         if (avatarState === 'illegal' && lastIllegalMove) {
-            const illegalMessages = [
-                `That's not a legal move! You can't move from ${lastIllegalMove.from} to ${lastIllegalMove.to}.`,
-                `Hey! That piece can't go there! Try again.`,
-                `Nice try, but that move is against the rules!`,
-                `Illegal move detected! Chess pieces have rules, you know.`,
-                `That's not how that piece moves! Study the rules first!`
-            ];
-            const randomMessage = illegalMessages[Math.floor(Math.random() * illegalMessages.length)];
-
             return {
                 avatar: '/about-me/chess-avatar/laughing.png',
-                message: randomMessage
+                message: 'Nice try, but that move is against the rules!'
             };
         }
 
         const game = chessGameRef.current;
-        const moveCount = game.history().length;
         const lastMove = game.history({ verbose: true }).pop();
 
         // Game start
-        if (moveCount === 0) {
+        if (game.history().length === 0) {
             return {
                 avatar: '/about-me/chess-avatar/waving.png',
                 message: "Welcome to the bonus stage!"
@@ -373,12 +578,10 @@ export default function About() {
 
         // Resignation
         if (gameStatus.includes('resigned')) {
-            if (gameStatus.includes('Computer wins')) {
-                return {
-                    avatar: '/about-me/chess-avatar/smug.png',
-                    message: "Aww, you gave up? I was just getting started!"
-                };
-            }
+            return {
+                avatar: '/about-me/chess-avatar/smug.png',
+                message: "Aww, you gave up? I was just getting started!"
+            };
         }
 
         // During game - check for captures
@@ -389,15 +592,7 @@ export default function About() {
             };
         }
 
-        // Show thinking expression when bot is thinking
-        if (waitingForBot) {
-            return {
-                avatar: '/about-me/chess-avatar/thinking.png',
-                message: "..."
-            };
-        }
 
-        // Position evaluation based expressions when not thinking
         if (positionEval > 100) {
             return {
                 avatar: '/about-me/chess-avatar/smug.png',
@@ -410,176 +605,17 @@ export default function About() {
                 message: "You're playing well! I need to be more careful."
             };
         }
+        else if (waitingForBot){
+            return {
+                avatar: '/about-me/chess-avatar/thinking.png',
+                message: "..."
+            }
+        }
         else {
             return {
                 avatar: '/about-me/chess-avatar/default.png',
-                message: ""
-            };
-        }
-    }
-
-    // Ask Stockfish for a move and play it
-    function makeStockfishMove() {
-        if (!stockfishRef.current) return;
-        setWaitingForBot(true);
-        stockfishRef.current.postMessage('position fen ' + chessGameRef.current.fen());
-        stockfishRef.current.postMessage('go depth 20');
-        stockfishRef.current.onmessage = (event) => {
-
-            // Parse evaluation from Stockfish output
-            const evalMatch = event.data.match(/score cp (-?\d+)/);
-            if (evalMatch) {
-                const centipawns = parseInt(evalMatch[1]);
-                setPositionEval(centipawns);
             }
-
-            const match = event.data.match(/bestmove ([a-h][1-8][a-h][1-8][qrbn]?)/);
-            if (match) {
-                // Check if the game is still in progress before making a move
-                if (chessGameRef.current.isGameOver() || gameStatus.includes('resigned')) {
-                    setWaitingForBot(false);
-                    return;
-                }
-
-                const move = chessGameRef.current.move({
-                    from: match[1].slice(0, 2),
-                    to: match[1].slice(2, 4),
-                    promotion: match[1][4]
-                });
-                if (move) {
-                    updateCapturedPieces(move);
-                }
-                if (!move) {
-                    console.error('Illegal move attempted:');
-                    return false;
-                }
-                setChessPosition(chessGameRef.current.fen());
-                const newHistory = chessGameRef.current.history();
-                setMoveHistory(newHistory);
-                setCurrentOpening(findOpeningByPGN());
-                extractMovesFromPGN(chessGameRef.current.pgn())
-
-                // Only set waiting to false when we actually get the best move
-                setWaitingForBot(false);
-            }
-
-            if (gameStatus.includes('resigned')) {
-
-            }
-        };
-    }
-
-    // Handle user move
-    function onPieceDrop(sourceSquare: string, targetSquare: string, piece: Piece) {
-        if (waitingForBot) return false;
-
-        let move;
-        try {
-            move = chessGameRef.current.move({
-                from: sourceSquare,
-                to: targetSquare,
-            });
-
-            if (!move) return false;
-
-            if (move.isPromotion()) {
-                chessGameRef.current.undo();
-                return true;
-            }
-
-            updateCapturedPieces(move);
-            setChessPosition(chessGameRef.current.fen());
-
-            const newHistory = chessGameRef.current.history();
-            setMoveHistory(newHistory);
-            setCurrentOpening(findOpeningByPGN());
-            extractMovesFromPGN(chessGameRef.current.pgn())
-
-            setTimeout(makeStockfishMove, 200);
-            return true;
-
-
-        } catch (error) {
-
-
-            return false;
         }
-    }
-
-    // Handle promotion piece selection
-    function onPromotionPieceSelect(piece?: string, promoteFromSquare?: string, promoteToSquare?: string) {
-        if (!piece || !promoteFromSquare || !promoteToSquare) return false;
-
-        // Convert the piece format (e.g., "wQ" -> "q")
-        const promotionPiece = piece.toLowerCase().slice(1);
-
-        const move = chessGameRef.current.move({
-            from: promoteFromSquare,
-            to: promoteToSquare,
-            promotion: promotionPiece
-        });
-
-        if (!move) return false;
-
-        updateCapturedPieces(move);
-        setChessPosition(chessGameRef.current.fen());
-        const newHistory = chessGameRef.current.history();
-        setMoveHistory(newHistory);
-        setCurrentOpening(findOpeningByPGN());
-        extractMovesFromPGN(chessGameRef.current.pgn());
-
-        setTimeout(makeStockfishMove, 200);
-        return true;
-    }
-
-    // Resign function
-    function handleResign() {
-        const game = chessGameRef.current;
-
-        // Stop Stockfish worker immediately to prevent memory errors
-        if (stockfishRef.current) {
-            stockfishRef.current.postMessage('stop');
-            stockfishRef.current.postMessage('ucinewgame');
-            stockfishRef.current.postMessage('isready');
-        }
-
-        setGameStatus('You resigned - Computer wins!');
-        setWaitingForBot(false);
-
-        // Update the position to trigger re-render
-        setChessPosition(game.fen());
-    }
-
-    // Undo function
-    function handleUndo() {
-        if (waitingForBot) return;
-        const game = chessGameRef.current;
-        if (game.history().length >= 2) {
-            game.undo(); // Undo computer move
-            game.undo(); // Undo player move
-            setChessPosition(game.fen());
-            const newHistory = game.history();
-            setMoveHistory(newHistory);
-        }
-    }
-
-    // New Game function
-    function handleNewGame() {
-
-        // Inform Stockfish of the new game
-        if (stockfishRef.current) {
-            stockfishRef.current.postMessage('stop');
-            stockfishRef.current.postMessage('ucinewgame');
-            stockfishRef.current.postMessage('isready');
-        }
-
-        chessGameRef.current = new Chess();
-        setChessPosition(chessGameRef.current.fen());
-        setMoveHistory([]);
-        setGameStatus('Game in progress');
-        setWaitingForBot(false);
-        setCapturedByWhite([]);
-        setCapturedByBlack([]);
     }
 
 
@@ -648,7 +684,7 @@ export default function About() {
                         </div>
                         <div className='w-full flex items-end justify-end md:hidden'>
                             <div className='w-fit flex flex-row gap-4 rounded-lg '>
-                                {chessGameRef.current.isGameOver() || gameStatus.includes('resigned') ? (
+                                {chessGameRef.current.isGameOver() ? (
                                     <Button className='gap-2 w-full' variant="secondary" onClick={handleNewGame}>
                                         <RotateCcw className='size-4' /> New Game
                                     </Button>

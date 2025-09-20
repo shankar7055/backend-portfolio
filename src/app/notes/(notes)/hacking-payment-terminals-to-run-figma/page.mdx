@@ -1,0 +1,125 @@
+import Image from "next/image"
+import { Separator } from "@/components/ui/separator"
+import { Code } from '@/components/code';
+import { SoundButton } from '@/components/sound-button';
+
+# Hacking Payment Terminals to run Figma
+<time> October 26, 2024 </time>
+
+This post addresses the issue of running Figma on low-end devices, but not in the way you may consider it an optimal engineering solution; it's more of a hack, a gambiarra.
+
+With that disclaimer, we're off!
+
+<Separator className="my-6" />
+
+<div className="flex flex-col gap-6">
+    <div className="flex flex-row gap-4">
+        <SoundButton />
+        <div className="flex flex-col"> 
+            <span className='text-base'> Gambiarra </span>
+            <span className='text-sm text-muted-foreground'> ɡɐ̃bɪaʁa </span>
+        </div>
+    </div>
+    <div className="flex flex-col gap-2">
+        <span className='text-sm text-muted-foreground'> noun </span>
+        <em className=''> Clever, makeshift, and often temporary solution to a problem, typically created using available materials and ingenuity. A "MacGyver" style improvisation.</em>
+    </div>
+ </div>
+
+<Separator className="my-6" />
+
+## Context 
+
+This happened when I was working at Stone, a fintech company that powers payments through credit card machines.
+
+My team wanted to redesign the main sales app from Stone, which moves millions of dollars every single day. As you might imagine, convincing a director's board of a big company to touch something of this magnitude was no small feat. 
+
+Our best shot was to make the directors feel it in their hands. Not a presentation, not a slide deck—the product itself. Our job was to build the most remarkable version yet, put it in front of them, and let the experience do the talking.
+
+## The prototype
+
+My process for creating prototypes is usually simple: design the screens, wire the flows, and run it on the device through Figma. We did all that—except test it on the payment terminal.
+
+When I asked the terminal design team how they handled demos, they told me they take screenshots of every screen and play them back in the gallery app.
+
+I knew this wouldn’t work for us, so I set out to find a better way.
+
+##  The Struggle
+
+At first, I tried the obvious path — install Figma Mirror directly.
+
+<Image src="/notes/payment-terminal/update_devices_os.png" width={1280} height={954} sizes="100vw" alt="Image" className="bg-gray-100 rounded-sm object-cover mb-6" />
+
+Okay, let's run it with an older version of the app and install it via USB.
+
+<Image src="/notes/payment-terminal/figma-sign-in.png" width={1280} height={954} sizes="100vw" alt="Image" className="bg-gray-100 rounded-sm object-cover mb-6" />
+
+Success! The app was installed successfully. Now I just have to sign in ...
+
+<Image src="/notes/payment-terminal/browser-error-message.png" width={1280} height={954} sizes="100vw" alt="Image" className="bg-gray-100 rounded-sm object-cover mb-6" />
+
+The browser was not opening up, so I tried logging in from the browser before launching the app. After a few tries I managed to sign in successfully!
+
+<Image src="/notes/payment-terminal/home-page.png" width={1280} height={954} sizes="100vw" alt="Image" className="bg-gray-100 rounded-sm object-cover mb-6" />
+
+Now for the easy part. I just had to open my design file and ...
+
+## The Major Problem
+
+<Image src="/notes/payment-terminal/os-dead.png" width={1280} height={954} sizes="100vw" alt="Image" className="bg-gray-100 rounded-sm object-cover mb-6" />
+
+The whole OS crashed and restarted in the middle of the process. I thought this could only be a bug, and tried again. Same thing — crash and reboot.
+
+With no errors or warnings displayed, it was time to plug it into Android Studio and investigate. This is what I found in the console log:
+
+ <Code code={`\`\`\`bash  
+    lowmemorykiller lmkd Kill 'com.figma.mirror';
+    reason: low watermark is breached and swap is low
+  \`\`\``}/>
+
+Opening the design file made the app request more and more memory. Eventually, the kernel started killing other processes to meet the demand. The last process was the OS itself, which is why there was a reboot.
+
+Up until this point, I didn't have a clue how much memory the device held, so it was time to figure out this, too.
+
+
+ <Code code={`\`\`\`bash  
+    MemTotal: 0.843 GB
+    MemFree: 0.022 GB
+    MemAvailable: 0.355 GB
+  \`\`\``}/>
+
+Quite shocking! Figma requires 2 GB of RAM, but my device barely had 300 MB available.
+
+At first I thought the file was too heavy, but even for a blank file it requested 2GB the same way so, it's a dead end.
+
+## A New Perspective
+
+I could’ve stopped there — documented the limitation, moved on. But I couldn’t accept that the directors’ first touchpoint with our redesign would be a static slideshow.
+
+So I started testing what the terminal could do. Playing videos and livestreams on YouTube ran flawlessly. That gave me the spark: if the device couldn’t run the prototype, maybe it could display it.
+
+So I downloaded Chrome Remote Desktop, hosted a session on my MacBook, adjusted the aspect ratio to vertical, zoomed in, and opened the session on the payment terminal.
+
+Suddenly, it worked. Interactive, responsive, and on the very device the directors already knew.
+
+The prototype worked exactly as intended — interactively, and in the actual terminal.
+<div className='flex w-full justify-center gap-4 mb-6'>
+  <video src="/notes/payment-terminal/timeline1.mp4" className="my-0 border w-1/2 bg-gray-100 rounded-lg object-contain" autoPlay loop muted playsInline />
+  <video src="/notes/payment-terminal/timeline2.mp4" className="my-0 border w-1/2 bg-gray-100 rounded-lg object-contain" autoPlay loop muted playsInline />
+</div>
+
+As you can see in the video, it looks like the app was native. The illusion was perfect.
+
+## The Moment
+
+When we handed the prototype to the board, the reaction said it all.
+
+> “Wait… is this already developed? When can we launch this to customers?”
+
+Exactly the response we wanted. They were convinced. We got the green light to bring in a new development team and push the project forward.
+
+## Final Thoughts
+
+This experience taught me a lasting lesson: no amount of words, slides, or decks is worth a product demo. When people can touch the future, they don’t need convincing.
+
+As a side note, I also documented every step of the setup, so no designer at Stone would ever have to fall back to a slideshow again. Everyone deserves better than that.

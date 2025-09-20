@@ -48,7 +48,7 @@ export const Pointer = ({
   )
 }
 
-export const FollowPointer = ({ x, y, name }: { x: any; y: any; name: string }) => {
+export const FollowPointer = ({ x, y, name, style, ...props }: { x: any; y: any; name: string; style?: React.CSSProperties } & Omit<React.HTMLAttributes<HTMLDivElement>, 'style'>) => {
   const isStaticPosition = typeof x === 'number' && typeof y === 'number';
 
   return (
@@ -58,7 +58,8 @@ export const FollowPointer = ({ x, y, name }: { x: any; y: any; name: string }) 
         style={{
           top: !isStaticPosition ? y : undefined,
           left: !isStaticPosition ? x : undefined,
-          pointerEvents: 'none'
+          pointerEvents: 'none',
+          ...style
         }}
         initial={{
           scale: 1,

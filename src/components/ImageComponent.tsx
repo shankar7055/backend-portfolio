@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import * as Dialog from '@radix-ui/react-dialog';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
@@ -25,8 +26,7 @@ function ImageContent({ src, alt, className, width, height, isZoomed, setIsZoome
                     transition={{ duration: 0.4 }}
                     data-cursor="hover"
                 >
-                    <motion.img
-
+                    <Image
                         src={src}
                         alt={alt || ''}
                         sizes="100vw"
@@ -59,11 +59,10 @@ function ImageContent({ src, alt, className, width, height, isZoomed, setIsZoome
                                         <VisuallyHidden.Root><Dialog.Title /></VisuallyHidden.Root>
                                         <VisuallyHidden.Root><Dialog.Description /></VisuallyHidden.Root>
 
-                                        <motion.img
-
+                                        <Image
                                             src={src}
                                             alt={alt || ''}
-                                            className="z-50 transform-none"
+                                            className="bg-white z-50 transform-none"
                                             width={width}
                                             height={height}
                                         />

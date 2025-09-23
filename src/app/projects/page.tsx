@@ -40,18 +40,19 @@ export default function Home() {
 
         </div>
 
-
         <ScrollScaleElement className="flex flex-col gap-2">
-          <Link className="flex flex-col gap-2" href="/projects/linkme">
-            <Image width={2000} height={1433} alt="" src="/projects/linkme/linkme_home.png" className="rounded-lg"></Image>
+          <Link className="flex flex-col gap-2" href="/projects/lumini">
+            <Image width={820} height={420} alt="" src="/projects/lumini/home_lumini-p-1080.png" className="rounded-lg"></Image>
           </Link>
 
           <Link className="w-fit justify-between flex flex-col px-2 py-2 items-start inline-flex rounded-md text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground"
-            href="/notes/redesigning-my-portfolio">
-            <h3 className="text-lg">Link.me</h3>
-            <h4 className="text-sm text-muted-foreground">Evolving a payment link app for brick-and-mortar businesses to sell online.</h4>
+            href="/projects/lumini">
+            <h3 className="text-lg">Praia Design System</h3>
+            <h4 className="text-sm text-muted-foreground">Building a career choice experience for students with Lumini App.</h4>
           </Link>
         </ScrollScaleElement>
+
+
 
         <ScrollScaleElement className="flex flex-col gap-2">
           <Link className="flex flex-col gap-2" href="/projects/laureate">
@@ -59,21 +60,22 @@ export default function Home() {
           </Link>
 
           <Link className="w-fit justify-between flex flex-col px-2 py-2 items-start inline-flex rounded-md text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground"
-            href="/notes/redesigning-my-portfolio">
-            <h3 className="text-lg">Laureate</h3>
+            href="/projects/laureate">
+            <h3 className="text-lg">Stone Payment Terminal</h3>
             <h4 className="text-sm text-muted-foreground">Redesigning the e-commerce experience for students in distance learning.</h4>
           </Link>
         </ScrollScaleElement>
 
+
         <ScrollScaleElement className="flex flex-col gap-2">
-          <Link className="flex flex-col gap-2" href="/projects/lumini">
-            <Image width={820} height={420} alt="" src="/projects/lumini/home_lumini-p-1080.png" className="rounded-lg"></Image>
+          <Link className="flex flex-col gap-2" href="/projects/linkme">
+            <Image width={2000} height={1433} alt="" src="/projects/linkme/images/linkme.png" className="bg-white rounded-lg"></Image>
           </Link>
 
           <Link className="w-fit justify-between flex flex-col px-2 py-2 items-start inline-flex rounded-md text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground"
-            href="/notes/redesigning-my-portfolio">
-            <h3 className="text-lg">Lumini</h3>
-            <h4 className="text-sm text-muted-foreground">Building a career choice experience for students with Lumini App.</h4>
+            href="/projects/linkme">
+            <h3 className="text-lg">Link.me</h3>
+            <h4 className="text-sm text-muted-foreground">Evolving a payment link app for brick-and-mortar businesses to sell online.</h4>
           </Link>
         </ScrollScaleElement>
 

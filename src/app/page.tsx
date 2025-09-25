@@ -16,24 +16,9 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Twitter, Linkedin, Github, Mail } from "@/components/icons";
 import TurbulenceCanvas from '@/components/canvas'
-import dynamic from 'next/dynamic';
-
-
-const ScratchToReveal = dynamic(() => import('@/components/scratch'), {
-  ssr: false,
-  loading: () => <div className="w-[360px] h-[360px] bg-gray-800 rounded-lg animate-pulse" />
-});
-
-const LogoVariation2 = dynamic(() => import('@/components/logo-variation-2').then(mod => ({ default: mod.LogoVariation2 })), {
-  ssr: false,
-  loading: () => <div className="w-[320px] h-[320px] bg-gray-200 rounded-2xl animate-pulse" />
-});
-
-// Lazy load Album component since it includes audio functionality
-const Album = dynamic(() => import('@/components/ui/album').then(mod => ({ default: mod.Album })), {
-  ssr: false,
-  loading: () => <div className="w-32 h-32 bg-gray-200 rounded-lg animate-pulse" />
-});
+import { Album } from "@/components/ui/album";
+import { LogoVariation2 } from "@/components/logo-variation-2";
+import ScratchToReveal from "@/components/scratch";
 
 
 export default function Home() {

@@ -7,13 +7,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 
 // Inner component that uses the cursor context
-function ImageContent({ src, alt, className, width, height, isZoomed, setIsZoomed }: {
+function ImageContent({ src, alt, className, width, height, isZoomed, setIsZoomed, priority }: {
     src: string;
     alt?: string;
     className?: string;
     width: number;
     height: number;
     isZoomed: boolean;
+    priority?: boolean;
     setIsZoomed: (zoomed: boolean) => void;
 }) {
 
@@ -29,10 +30,12 @@ function ImageContent({ src, alt, className, width, height, isZoomed, setIsZoome
                     <Image
                         src={src}
                         alt={alt || ''}
-                        sizes="100vw"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
                         className={className}
                         width={width}
                         height={height}
+                        quality={95}
+                        priority={priority}
                     />
                 </motion.div>
             </Dialog.Trigger>
@@ -62,9 +65,11 @@ function ImageContent({ src, alt, className, width, height, isZoomed, setIsZoome
                                         <Image
                                             src={src}
                                             alt={alt || ''}
-                                            className="bg-white z-50 transform-none"
+                                            className={`${className} z-50 transform-none`}
                                             width={width}
                                             height={height}
+                                            quality={100}
+                                            sizes="90vw"
                                         />
                                     </motion.div>
                                 </Dialog.Content>
@@ -77,12 +82,13 @@ function ImageContent({ src, alt, className, width, height, isZoomed, setIsZoome
     );
 }
 
-export default function ImageComponent({ src, alt, className, width, height }: {
+export default function ImageComponent({ src, alt, className, width, height, priority }: {
     src: string;
     alt?: string;
     className?: string;
     width: number;
     height: number;
+    priority?: boolean;
 }) {
     const [isZoomed, setIsZoomed] = useState(false);
 
@@ -97,6 +103,7 @@ export default function ImageComponent({ src, alt, className, width, height }: {
             height={height}
             isZoomed={isZoomed}
             setIsZoomed={setIsZoomed}
+            priority={priority}
         />
     );
 }

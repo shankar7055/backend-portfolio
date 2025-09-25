@@ -7,6 +7,7 @@ const nextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   // Optionally, add any other Next.js config below
   images: {
+    qualities: [95, 100],
     remotePatterns: [{
       protocol: 'https',
       hostname: 'api.microlink.io', // Microlink Image Preview

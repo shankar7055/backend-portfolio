@@ -432,7 +432,7 @@ const TurbulenceCanvas = forwardRef<TurbulenceCanvasRef, TurbulenceCanvasProps>(
         setIsAnimating(false)
       }
     }, 50) // 50ms per point for smooth animation
-  }, [isAnimating, allStrokes])
+  }, [])
 
   // Initialize canvas and event listeners
   useEffect(() => {

@@ -113,7 +113,7 @@ export default function Home() {
 
             <FollowPointer style={{ "--stagger": 14 } as React.CSSProperties} x={1800} y={1000} name="Andre"></FollowPointer>
 
-            <Image draggable="false" loading="lazy" style={{ "--stagger": 10 } as React.CSSProperties} className="select-none relative col-start-6 row-start-4 right-[60px] rotate-[-18deg] right-[230px] bottom-[80px] " width={160} height={160} src="/about-me/stickers/Ken.png" alt="Profile example" />
+            <Image draggable="false" loading="lazy" style={{ "--stagger": 10 } as React.CSSProperties} className="select-none relative w-40 col-start-6 row-start-4 right-[60px] rotate-[-18deg] right-[230px] bottom-[80px] " width={600} height={600} src="/about-me/stickers/Ken.png" alt="Profile example" />
 
             <Image style={{ "--stagger": 36} as React.CSSProperties} draggable="false" loading="lazy" className="shadow-lg select-none relative col-start-7 row-start-1 right-[60px] rotate-[9deg] left-[400px]" width={160} height={159} src="/about-me/stickers/brazil-stamp.png" alt="Profile example" />
 
@@ -401,8 +401,8 @@ export default function Home() {
 
                   </div>
 
-                  <Image draggable="false" className=" rounded-lg absolute top-0 left-0" src="/about-me/chess-avatar/chess-poster.svg" width={177} height={172} alt="Horse" />
-                  <Image draggable="false" className=" rounded-lg absolute bottom-0 right-0" src="/about-me/chess-avatar/king-chess-poster.svg" width={224} height={233} alt="Horse" />
+                  <Image draggable="false" className=" rounded-lg absolute top-0 left-0" src="/about-me/chess-avatar/chess-poster.svg" width={177} height={172} alt="" />
+                  <Image draggable="false" className=" rounded-lg absolute bottom-0 right-0" src="/about-me/chess-avatar/king-chess-poster.svg" width={224} height={233} alt="" />
 
                 </Link>
               </ScratchToReveal>

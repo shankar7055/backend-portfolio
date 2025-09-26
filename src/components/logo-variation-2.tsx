@@ -50,7 +50,7 @@ export function LogoVariation2() {
       >
         {/* Main displayed image */}
         <Image
-          src={`/logo variation/${logoImages[currentImageIndex]}`}
+          src={`/about-me/logo-variation/${logoImages[currentImageIndex]}`}
           alt={`Logo variation ${currentImageIndex + 1}`}
           width={1024}
           height={1024}

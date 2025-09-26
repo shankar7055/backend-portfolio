@@ -41,7 +41,7 @@ export function LogoVariation() {
           className="w-full h-full"
         >
           <Image
-            src={`/logo variation/${currentImage}`}
+            src={`/about-me/logo-variation/${currentImage}`}
             alt="Logo variation"
             width={1024}
             height={1024}

@@ -4,9 +4,16 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import rehypePrettyCode from "rehype-pretty-code";
- 
-export async function Code({ code }: { code: string }) {
-  const highlightedCode = await highlightCode(code);
+
+interface CodeProps {
+  code: string;
+  grid?: boolean;
+  theme?: any;
+  keepBackground?: boolean;
+}
+
+export async function Code({ code, grid, theme, keepBackground = false }: CodeProps) {
+  const highlightedCode = await highlightCode(code, { grid, theme, keepBackground });
   return (
     <section
       dangerouslySetInnerHTML={{
@@ -16,12 +23,14 @@ export async function Code({ code }: { code: string }) {
   );
 }
  
-async function highlightCode(code: string) {
+async function highlightCode(code: string, options: Partial<CodeProps> = {}) {
   const file = await unified()
     .use(remarkParse)
     .use(remarkRehype)
     .use(rehypePrettyCode, {
-      keepBackground: false,
+      keepBackground: options.keepBackground ?? false,
+      grid: options.grid,
+      theme: options.theme,
     })
     .use(rehypeStringify)
     .process(code);

@@ -41,7 +41,7 @@ export default function Home() {
 
         <ScrollScaleElement className="flex flex-col gap-2">
           <Link className="flex flex-col gap-2" href="/projects/stone-pos">
-            <Image width={820} height={420} alt="" src="/projects/stone-pos/sales-home.png" className="bg-white rounded-lg"></Image>
+            <Image priority width={820} height={420} alt="" src="/projects/stone-pos/sales-home.png" className="bg-white rounded-lg"></Image>
           </Link>
 
           <Link className="w-fit justify-between flex flex-col px-2 py-2 items-start inline-flex rounded-md text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground"
@@ -54,7 +54,7 @@ export default function Home() {
 
         <ScrollScaleElement className="flex flex-col gap-2">
           <Link className="flex flex-col gap-2" href="/projects/stone-link">
-            <Image width={2000} height={1433} alt="" src="/projects/stone-link/images/stone-link.png" className="bg-white rounded-lg"></Image>
+            <Image priority width={2000} height={1433} alt="" src="/projects/stone-link/images/stone-link.png" className="bg-white rounded-lg"></Image>
           </Link>
 
           <Link className="w-fit justify-between flex flex-col px-2 py-2 items-start inline-flex rounded-md text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground"
@@ -66,7 +66,7 @@ export default function Home() {
 
         <ScrollScaleElement className="flex flex-col gap-2">
           <Link className="flex flex-col gap-2" href="/projects/lumini">
-            <Image width={820} height={420} alt="" src="/projects/lumini/home.png" className="bg-white rounded-lg"></Image>
+            <Image priority width={820} height={420} alt="" src="/projects/lumini/home.png" className="bg-white rounded-lg"></Image>
           </Link>
 
           <Link className="w-fit justify-between flex flex-col px-2 py-2 items-start inline-flex rounded-md text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground"

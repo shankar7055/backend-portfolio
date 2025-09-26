@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import * as Dialog from '@radix-ui/react-dialog';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,6 +17,11 @@ function ImageContent({ src, alt, className, width, height, isZoomed, setIsZoome
     priority?: boolean;
     setIsZoomed: (zoomed: boolean) => void;
 }) {
+    // Preload the high-quality version
+    useEffect(() => {
+        const img = new window.Image();
+        img.src = src;
+    }, [src]);
 
     return (
         <Dialog.Root open={isZoomed} onOpenChange={setIsZoomed}>
@@ -70,6 +75,7 @@ function ImageContent({ src, alt, className, width, height, isZoomed, setIsZoome
                                             height={height}
                                             quality={100}
                                             sizes="90vw"
+                                            priority
                                         />
                                     </motion.div>
                                 </Dialog.Content>

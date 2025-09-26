@@ -387,7 +387,7 @@ export default function Home() {
               <ScratchToReveal width={360} height={360}>
 
                 <Link onPointerDown={(e) => e.stopPropagation()} href="/chess" className="group relative w-full h-full rounded-lg bg-black flex flex-col gap-4 items-center justify-center overflow-hidden">
-                  <Image draggable="false" className="rounded-lg absolute bottom-0 left-0" src="/about-me/chess-avatar/background.svg" width={360} height={360} alt="Horse" />
+                  <Image unoptimized draggable="false" className="rounded-lg absolute bottom-0 left-0" src="/about-me/chess-avatar/background.svg" width={360} height={360} alt="Horse" />
 
                   {/* Top scrolling text */}
                   <div className="scrolling-text-top absolute top-4 w-[400%] flex">
@@ -401,8 +401,8 @@ export default function Home() {
 
                   </div>
 
-                  <Image draggable="false" className=" rounded-lg absolute top-0 left-0" src="/about-me/chess-avatar/chess-poster.svg" width={177} height={172} alt="" />
-                  <Image draggable="false" className=" rounded-lg absolute bottom-0 right-0" src="/about-me/chess-avatar/king-chess-poster.svg" width={224} height={233} alt="" />
+                  <Image unoptimized draggable="false" className=" rounded-lg absolute top-0 left-0" src="/about-me/chess-avatar/chess-poster.svg" width={177} height={172} alt="" />
+                  <Image unoptimized draggable="false" className=" rounded-lg absolute bottom-0 right-0" src="/about-me/chess-avatar/king-chess-poster.svg" width={224} height={233} alt="" />
 
                 </Link>
               </ScratchToReveal>

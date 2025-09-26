@@ -17,31 +17,28 @@ function ImageContent({ src, alt, className, width, height, isZoomed, setIsZoome
     priority?: boolean;
     setIsZoomed: (zoomed: boolean) => void;
 }) {
-    // Preload the high-quality version
-    useEffect(() => {
-        const img = new window.Image();
-        img.src = src;
-    }, [src]);
-
     return (
         <Dialog.Root open={isZoomed} onOpenChange={setIsZoomed}>
             <Dialog.Trigger asChild>
                 <motion.div
                     className="relative cursor-zoom-in"
-                    layoutId={src}
-                    transition={{ duration: 0.4 }}
                     data-cursor="hover"
                 >
-                    <Image
-                        src={src}
-                        alt={alt || ''}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                        className={className}
-                        width={width}
-                        height={height}
-                        quality={95}
-                        priority={priority}
-                    />
+                    <motion.div
+                        layoutId={src}
+                        transition={{ duration: 0.4, ease: "easeInOut" }}
+                    >
+                        <Image
+                            src={src}
+                            alt={alt || ''}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                            className={className}
+                            width={width}
+                            height={height}
+                            quality={100}
+                            priority={priority}
+                        />
+                    </motion.div>
                 </motion.div>
             </Dialog.Trigger>
 
@@ -61,22 +58,11 @@ function ImageContent({ src, alt, className, width, height, isZoomed, setIsZoome
                                     <motion.div
                                         className='aspect-auto'
                                         layoutId={src}
-                                        transition={{ duration: 0.3 }}
+                                        transition={{ duration: 0.4, ease: "easeInOut" }}
                                         data-cursor="expanded"
                                     >
                                         <VisuallyHidden.Root><Dialog.Title /></VisuallyHidden.Root>
                                         <VisuallyHidden.Root><Dialog.Description /></VisuallyHidden.Root>
-
-                                        <Image
-                                            src={src}
-                                            alt={alt || ''}
-                                            className={`${className} z-50 transform-none`}
-                                            width={width}
-                                            height={height}
-                                            quality={100}
-                                            sizes="90vw"
-                                            priority
-                                        />
                                     </motion.div>
                                 </Dialog.Content>
                             </Dialog.Close>

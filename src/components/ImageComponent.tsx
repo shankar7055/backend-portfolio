@@ -1,80 +1,10 @@
 "use client"
+import { useState } from 'react'
+import { useRef } from 'react'
+import { useEffect } from 'react'
 
-import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
-import * as Dialog from '@radix-ui/react-dialog';
-import { motion, AnimatePresence } from 'framer-motion';
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 
-// Inner component that uses the cursor context
-function ImageContent({ src, alt, className, width, height, isZoomed, setIsZoomed, priority }: {
-    src: string;
-    alt?: string;
-    className?: string;
-    width: number;
-    height: number;
-    isZoomed: boolean;
-    priority?: boolean;
-    setIsZoomed: (zoomed: boolean) => void;
-}) {
-    return (
-        <Dialog.Root open={isZoomed} onOpenChange={setIsZoomed}>
-            <Dialog.Trigger asChild>
-                <motion.div
-                    className="relative cursor-zoom-in"
-                    data-cursor="hover"
-                >
-                    <motion.div
-                        layoutId={src}
-                        transition={{ duration: 0.4, ease: "easeInOut" }}
-                    >
-                        <Image
-                            src={src}
-                            alt={alt || ''}
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                            className={className}
-                            width={width}
-                            height={height}
-                            quality={100}
-                            priority={priority}
-                        />
-                    </motion.div>
-                </motion.div>
-            </Dialog.Trigger>
-
-            <AnimatePresence>
-                {isZoomed && (
-                    <Dialog.Portal forceMount>
-                        <Dialog.Overlay forceMount className="z-50 fixed inset-0 flex items-center justify-center">
-                            <motion.div
-                                className="fixed inset-0 backdrop-blur-sm"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.3 }}
-                            />
-                            <Dialog.Close asChild>
-                                <Dialog.Content forceMount asChild className="fixed p-0 max-w-5xl w-full rounded-xl overflow-clip z-50 border-none flex items-center justify-center shadow-xl cursor-zoom-out">
-                                    <motion.div
-                                        className='aspect-auto'
-                                        layoutId={src}
-                                        transition={{ duration: 0.4, ease: "easeInOut" }}
-                                        data-cursor="expanded"
-                                    >
-                                        <VisuallyHidden.Root><Dialog.Title /></VisuallyHidden.Root>
-                                        <VisuallyHidden.Root><Dialog.Description /></VisuallyHidden.Root>
-                                    </motion.div>
-                                </Dialog.Content>
-                            </Dialog.Close>
-                        </Dialog.Overlay>
-                    </Dialog.Portal>
-                )}
-            </AnimatePresence>
-        </Dialog.Root>
-    );
-}
-
-export default function ImageComponent({ src, alt, className, width, height, priority }: {
+export default function ImageComponent({ src, alt, className, width, height, priority, ...attributes }: {
     src: string;
     alt?: string;
     className?: string;
@@ -82,20 +12,138 @@ export default function ImageComponent({ src, alt, className, width, height, pri
     height: number;
     priority?: boolean;
 }) {
-    const [isZoomed, setIsZoomed] = useState(false);
+  const [isZoomedIn, setIsZoomedIn] = useState(false)
+  const imageRef = useRef<HTMLImageElement>(null)
+  const [transform, setTransform] = useState({
+    left: 0,
+    top: 0,
+    scale: 1
+  })
 
-    if (!src) return null;
+  const [zIndex, setZIndex] = useState('')
+  const [showOverlay, setShowOverlay] = useState(false)
+  const [overlayExiting, setOverlayExiting] = useState(false)
 
-    return (
-        <ImageContent
-            src={src}
-            alt={alt}
-            className={className}
-            width={width}
-            height={height}
-            isZoomed={isZoomed}
-            setIsZoomed={setIsZoomed}
-            priority={priority}
+  useEffect(() => {
+    window.addEventListener('scroll', zoomOut)
+
+    return () => {
+      window.removeEventListener('scroll', zoomOut)
+    }
+  }, [])
+
+  function toggleZoom() {
+    if (isZoomedIn) {
+      zoomOut()
+      return
+    }
+
+    if (!imageRef.current) return
+
+    const rect = imageRef.current.getBoundingClientRect()
+
+    const targetWidth = Math.min(
+      window.innerWidth * 0.85,
+      imageRef.current.naturalWidth
+    )
+    const targetHeight = Math.min(
+      window.innerHeight * 0.85,
+      imageRef.current.naturalHeight
+    )
+
+    const scaleX = targetWidth / imageRef.current.clientWidth
+    const scaleY = targetHeight / imageRef.current.clientHeight
+    const scale = Math.min(scaleX, scaleY)
+    const newWidth = imageRef.current.clientWidth * scale
+    const newHeight = imageRef.current.clientHeight * scale
+
+    setTransform({
+      left: -rect.left + window.innerWidth / 2 - newWidth / 2,
+      top: -rect.top + window.innerHeight / 2 - newHeight / 2,
+      scale
+    })
+    setZIndex('50')
+    setIsZoomedIn(true)
+    setShowOverlay(true)
+  }
+
+  function zoomOut() {
+    setTransform({
+      left: 0,
+      top: 0,
+      scale: 1
+    })
+    setIsZoomedIn(false)
+    setOverlayExiting(true)
+
+    // Hide overlay after exit animation completes
+    setTimeout(() => {
+      setShowOverlay(false)
+      setOverlayExiting(false)
+    }, 400)
+  }
+
+  if (!src) return null;
+
+  return (
+    <>
+      {showOverlay && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={zoomOut}
+          style={{
+            animation: overlayExiting
+              ? 'overlayFadeOut 0.3s ease-out forwards'
+              : 'overlayFadeIn 0.4s ease-out 0.1s forwards',
+            opacity: 0,
+            backdropFilter: 'blur(0px)'
+          }}
         />
-    );
+      )}
+      <style jsx>{`
+        @keyframes overlayFadeIn {
+          from {
+            opacity: 0;
+            backdrop-filter: blur(0px);
+          }
+          to {
+            opacity: 1;
+            backdrop-filter: blur(8px);
+          }
+        }
+        @keyframes overlayFadeOut {
+          from {
+            opacity: 1;
+            backdrop-filter: blur(8px);
+          }
+          to {
+            opacity: 0;
+            backdrop-filter: blur(0px);
+          }
+        }
+      `}</style>
+    <img
+      ref={imageRef}
+      src={src}
+      alt={alt || ''}
+      className={className}
+      width={width}
+      height={height}
+      onClick={toggleZoom}
+      style={{
+        transition: '0.4s ease-in-out transform',
+        transformOrigin: 'left top',
+        cursor: isZoomedIn ? 'zoom-out' : 'zoom-in',
+        transform: `translate(${transform.left}px, ${transform.top}px) scale(${transform.scale})`,
+        position: 'relative',
+        zIndex
+      }}
+      onTransitionEnd={() => {
+        if (!isZoomedIn) {
+          setZIndex('')
+        }
+      }}
+    />
+    </>
+  )
 }

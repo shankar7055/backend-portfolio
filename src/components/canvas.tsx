@@ -162,7 +162,7 @@ const TurbulenceCanvas = forwardRef<TurbulenceCanvasRef, TurbulenceCanvasProps>(
 
   const [colorPanelVisible, setColorPanelVisible] = useState(false)
   const [controlsDepressed, setControlsDepressed] = useState(false)
-  const [animatedPoints, setAnimatedPoints] = useState(0)
+  const [animatedPoints, setAnimatedPoints] = useState(1000)
   const [isAnimating, setIsAnimating] = useState(false)
   const animationIntervalRef = useRef<NodeJS.Timeout>()
 
@@ -494,6 +494,7 @@ const TurbulenceCanvas = forwardRef<TurbulenceCanvasRef, TurbulenceCanvasProps>(
     canvas.addEventListener('touchend', handleTouchEnd, { passive: false })
 
     startTurbulenceAnimation()
+    startHelloAnimation()
 
     return () => {
       canvas.removeEventListener('mousedown', handleMouseDown)

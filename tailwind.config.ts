@@ -79,6 +79,17 @@ const config: Config = {
           active: "hsl(var(--component-active))",
         },
         sidebar: "hsl(var(--sidebar))",
+        "editor-surface": "#F5F5F4",
+        "editor-border": "#E7E5E4",
+        "text-primary": "#1C1917",
+        "text-secondary": "#57534E",
+        "text-muted": "#A8A29E",
+        "syn-keyword": "#7C3AED",
+        "syn-string": "#059669",
+        "syn-property": "#0891B2",
+        "syn-comment": "#A8A29E",
+        "syn-value": "#DC2626",
+        "syn-plain": "#1C1917",
       },
 
       borderRadius: {

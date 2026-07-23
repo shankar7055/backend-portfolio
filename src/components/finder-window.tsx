@@ -1,0 +1,651 @@
+"use client";
+
+import React, { useState, useRef } from "react";
+import Image from "next/image";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import { siteConfig } from "@/lib/siteConfig";
+import { renderBold } from "@/lib/renderBold";
+
+const folderColors = [
+  { bg: "#8EB4CE", tab: "#7EA4BE", label: "white" },
+  { bg: "#64B5F6", tab: "#42A5F5", label: "white" },
+  { bg: "#F2A65A", tab: "#E2964A", label: "white" },
+  { bg: "#8DC4AB", tab: "#7DB49B", label: "white" },
+  { bg: "#DEBB8E", tab: "#CEAB7E", label: "white" },
+];
+
+const folderImages = [
+  "/cognify.png",
+  "/stronix.png",
+  "/flare.png",
+  "/retaingraph.png",
+  "/cortex.png",
+];
+
+const folderIcons = [
+  "/folder-icon-work.svg",
+  "/folder-icon-work.svg",
+  "/folder-icon-lens.svg",
+  "/folder-icon-ai.svg",
+  "/folder-icon-ai.svg",
+];
+
+interface FolderContentItem {
+  title: string;
+  description: string;
+  note?: string;
+  cta?: { label: string; url: string } | Array<{ label: string; url: string }>;
+}
+
+const folderContent: FolderContentItem[] = [
+  {
+    title: "COGNIFY",
+    description: "Designed and built an AI Operations Platform that lets users deploy specialized AI agents across isolated workspaces, track usage and cost-savings analytics, and manage subscriptions via integrated billing — all backed by a secure, production-deployed Node.js and PostgreSQL stack.",
+    cta: [
+      { label: "Visit Website", url: "https://cognify-one-ivory.vercel.app/" },
+      { label: "View Source", url: "https://github.com/shankar7055/COGNIFY" },
+    ],
+  },
+  {
+    title: "Stronix",
+    description: "A B2B supply chain platform built around real operational problems — concurrency-safe inventory reservations (atomic MongoDB stock guards), transaction-wrapped order rollbacks, and an auto-assignment algorithm that routes orders to distributors based on service area and current load. Role-aware multi-persona frontend (admin/warehouse/client/logistics) with JWT auth.",
+    cta: [
+      { label: "Visit Website", url: "https://stronix-navy.vercel.app" },
+      { label: "View Source", url: "https://github.com/shankar7055/STRONIX" },
+    ],
+  },
+  {
+    title: "Flare",
+    description: "Developed an agentic productivity assistant that helps users stay ahead of deadlines through AI-powered task prioritization, schedule planning, and proactive reminders. Built a responsive React application with a focus on modern UI, smooth user experience, and scalable frontend architecture.",
+    cta: [
+      { label: "Visit Website", url: "https://flare-zsbt.vercel.app/" },
+      { label: "View Source", url: "https://github.com/shankar7055/Flare" },
+    ],
+  },
+  {
+    title: "RetainGraph",
+    description: "An AI co-pilot for Customer Success teams that ingests client interaction data into a per-account knowledge graph (via Cognee) instead of flat text — surfacing connections between events like a delayed feature, a ticket spike, and a competitor mention that would otherwise stay buried.\n\nA backend worker generates real-time churn risk scores with root-cause explanations (LLM in JSON mode, Groq), with a comparison view contrasting naive vector search against graph-based reasoning. Built the backend, AI/graph pipeline, and system design.",
+    cta: [
+      { label: "Visit Website", url: "https://retain-graph.vercel.app" },
+      { label: "View Source", url: "https://github.com/shankar7055/RetainGraph" },
+    ],
+  },
+  {
+    title: "Cortex",
+    description: "Led backend and integration architecture for an AI-driven e-commerce operations platform. Built scalable backend services and REST APIs to support AI-powered workflows. Integrated AI intelligence layer with frontend systems and external services. Ensured secure deployments, real-time data handling, and system reliability.",
+    cta: [
+      { label: "Visit Website", url: "https://cortex-projects.vercel.app/" },
+      { label: "View Source", url: "https://github.com/Joohhnnyyy/CORTEX" },
+    ],
+  },
+];
+
+const appTools = [
+  { label: "Claude", icon: "/app-claude.jpg" },
+  { label: "Figma", icon: "/app-figma.jpg" },
+  { label: "Cursor", icon: "/app-cursor.jpg" },
+  { label: "Google AI Studio", icon: "/app-google-ai.jpg" },
+  { label: "Lovable", icon: "/app-lovable.jpg" },
+  { label: "Codex", icon: "/app-codex.jpg" },
+  { label: "GitHub", icon: "/app-github.jpg" },
+  { label: "ChatGPT", icon: "/app-chatgpt.jpg" },
+];
+
+const sidebarItems = [
+  { id: "yanliu", label: "Projects", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2196F3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
+];
+
+function FolderIcon({ color, title, onClick, isSelected, icon }: {
+  color: typeof folderColors[number];
+  title: string;
+  onClick: () => void;
+  isSelected: boolean;
+  icon: string;
+}) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <motion.button
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="flex flex-col items-center gap-2.5 group cursor-pointer w-[100px]"
+      whileTap={{ scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+    >
+      <div className="relative w-[96px] h-[80px]" style={{
+        filter: isSelected ? `drop-shadow(0 2px 8px ${color.bg}66)` : "drop-shadow(0 2px 4px rgba(0,0,0,0.1))",
+        perspective: "200px",
+      }}>
+        <svg viewBox="0 0 96 80" className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="12" width="96" height="68" rx="8" fill={color.tab} />
+          <path
+            d="M0 20 C0 14.5, 4.5 10, 10 10 L32 10 Q36 10, 38 6 Q40 2, 44 2 L86 2 Q94 2, 96 10 L96 20 L0 20 Z"
+            fill={color.tab}
+          />
+        </svg>
+        {/* Inner "papers" visible when folder opens */}
+        <div
+          className="absolute left-[6px] right-[6px] bottom-[6px] h-[50px] rounded-[4px] transition-opacity duration-200"
+          style={{
+            background: "rgba(255,255,255,0.5)",
+            opacity: hovered ? 1 : 0,
+          }}
+        />
+        {/* Front panel — tilts up on hover */}
+        <motion.div
+          className="absolute left-[1px] right-[1px] bottom-[1px] h-[62px] rounded-[7px]"
+          style={{
+            backgroundColor: color.bg,
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.06)",
+            transformOrigin: "bottom center",
+          }}
+          animate={{
+            rotateX: hovered ? -18 : 0,
+          }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
+          <img
+            src={icon}
+            alt=""
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[44px] object-contain pointer-events-none"
+            style={{ filter: "brightness(0) saturate(0)", opacity: 0.1, mixBlendMode: "multiply" }}
+          />
+        </motion.div>
+      </div>
+      <span className={`text-[11px] leading-tight text-center whitespace-nowrap min-h-[28px] transition-colors duration-200 ${
+        isSelected ? "text-stone-900 font-medium" : "text-stone-500 group-hover:text-stone-700"
+      }`}>
+        {title}
+      </span>
+    </motion.button>
+  );
+}
+
+function FolderSideSheet({ folderIndex, onClose, onNavigate }: {
+  folderIndex: number;
+  onClose: () => void;
+  onNavigate: (index: number) => void;
+}) {
+  const content = folderContent[folderIndex];
+  const color = folderColors[folderIndex];
+  const image = folderImages[folderIndex];
+  const icon = folderIcons[folderIndex];
+  const nextIndex = (folderIndex + 1) % folderContent.length;
+  const dirRef = useRef(1);
+  const prevIndexRef = useRef(folderIndex);
+  if (folderIndex !== prevIndexRef.current) {
+    dirRef.current = folderIndex > prevIndexRef.current ? 1 : -1;
+    prevIndexRef.current = folderIndex;
+  }
+
+  return (
+    <motion.div
+      className="absolute inset-0 z-10"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <div
+        className="absolute inset-0 backdrop-blur-sm bg-black/5 cursor-pointer"
+        onClick={onClose}
+      />
+      <motion.div
+        className="absolute top-0 right-0 z-20 h-full w-[480px] border-l border-stone-200 shadow-xl overflow-hidden rounded-l-xl"
+        style={{ backgroundColor: "#FAF8F5" }}
+        initial={{ x: "100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "100%" }}
+        transition={{ type: "spring", damping: 28, stiffness: 300 }}
+      >
+        <div className="absolute inset-0 pointer-events-none opacity-[0.06] rounded-l-xl overflow-hidden" style={{
+          backgroundImage: "url(/noise-texture.png)",
+          backgroundRepeat: "repeat",
+          backgroundSize: "200px 200px",
+        }} />
+
+        <div className="relative flex items-center justify-between px-5 py-3 border-b border-stone-200/60 z-10" style={{ backgroundColor: `${color.bg}08` }}>
+          <div className="flex items-center gap-2.5">
+            <img src={icon} alt="" className="w-5 h-5 object-contain" style={{ filter: `brightness(0) saturate(0) opacity(0.5)` }} />
+            <span className="text-[14px] text-stone-700 font-medium">
+              {content.title}
+            </span>
+          </div>
+          <button
+            onClick={(e) => { e.stopPropagation(); onClose(); }}
+            className="text-stone-400 hover:text-stone-600 transition-colors cursor-pointer"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="relative h-[calc(100%-45px)] overflow-hidden">
+          <AnimatePresence initial={false} custom={dirRef.current}>
+            <motion.div
+              key={folderIndex}
+              custom={dirRef.current}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              variants={{
+                enter: (dir: number) => ({ x: dir * -480 }),
+                center: { x: 0 },
+                exit: (dir: number) => ({ x: dir * 480 }),
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              style={{ position: "absolute", top: 0, left: 0, right: 0 }}
+            >
+              <div className="relative w-full">
+                <Image src={image} alt={content.title} width={480} height={300} className="w-full h-auto object-contain" priority />
+              </div>
+
+              <div className="relative p-5 space-y-4">
+                {content.description.split("\n\n").map((para, i) => (
+                  <p key={i} className="text-stone-600 leading-relaxed text-[14px]">
+                    {renderBold(para)}
+                  </p>
+                ))}
+                {Boolean(content.note) && (
+                  <p className="text-stone-500 italic text-[13px] leading-relaxed">
+                    {content.note}
+                  </p>
+                )}
+                {content.cta && (
+                  <div className="flex gap-4">
+                    {(Array.isArray(content.cta) ? content.cta : [content.cta]).map((link, i) => (
+                      <a
+                        key={i}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block text-[13px] px-4 py-1.5 rounded-md border border-stone-700 text-stone-700 hover:bg-stone-700 hover:text-white transition-colors"
+                      >
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        <div className="absolute bottom-4 right-5 flex items-center gap-3 z-10">
+          {folderIndex > 0 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onNavigate(folderIndex - 1); }}
+              className="flex items-center gap-1 text-[13px] text-stone-700 hover:text-stone-900 transition-colors cursor-pointer"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+              <span>Back</span>
+            </button>
+          )}
+          {folderIndex < folderContent.length - 1 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onNavigate(folderIndex + 1); }}
+              className="flex items-center gap-1 text-[13px] text-stone-700 hover:text-stone-900 transition-colors cursor-pointer"
+            >
+              <span>Next</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function LockNotification({ onUnlock }: { onUnlock: () => void }) {
+  return (
+    <motion.div
+      className="absolute inset-0 z-20 flex items-center justify-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <motion.div
+        className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-lg border border-white/60 px-6 py-5 w-[340px] text-center"
+        initial={{ opacity: 0, y: -20, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -10, scale: 0.97 }}
+        transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+      >
+        <div className="flex justify-center mb-3">
+          <div className="bg-stone-100 rounded-full px-3 py-1.5 flex items-center">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-stone-500 bell-shake">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+            </svg>
+          </div>
+        </div>
+        <p className="text-[11px] font-semibold tracking-widest uppercase text-stone-500 mb-1.5">Reminder</p>
+        <p className="text-[14px] text-stone-700 leading-snug mb-4">
+          Tools evolve. Curiosity stays.<br />Small steps move things forward.
+        </p>
+        <div className="flex border-t border-stone-200">
+          <button
+            onClick={onUnlock}
+            className="flex-1 py-2.5 text-[14px] text-blue-500 font-medium hover:bg-stone-50 transition-colors border-r border-stone-200 rounded-bl-2xl"
+          >
+            Okay!
+          </button>
+          <button
+            onClick={onUnlock}
+            className="flex-1 py-2.5 text-[14px] text-blue-500 font-medium hover:bg-stone-50 transition-colors rounded-br-2xl"
+          >
+            Got it!
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+export function FolderWindowContent() {
+  const [openFolder, setOpenFolder] = useState<number | null>(null);
+  const [unlocked, setUnlocked] = useState(true);
+  const [activeSidebar, setActiveSidebar] = useState("yanliu");
+  const [isMobile, setIsMobile] = useState(false);
+
+  React.useEffect(() => {
+    setIsMobile(window.innerWidth < 1024);
+  }, []);
+
+  return (
+    <div className="flex justify-center px-4 lg:px-0">
+      <div className="w-[calc(100vw-32px)] lg:w-full max-w-[1200px] font-[family-name:var(--font-noto)]">
+        <div className="relative bg-[#F5F5F4] rounded-2xl overflow-hidden border border-stone-300/40" style={{ boxShadow: "0 4px 24px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04)" }}>
+          {/* Paper texture overlay */}
+          <div className="absolute inset-0 pointer-events-none z-[1] rounded-2xl overflow-hidden" style={{
+            backgroundImage: "url(/paper-texture.jpg)",
+            backgroundSize: "500px",
+            backgroundRepeat: "repeat",
+            mixBlendMode: "multiply",
+            opacity: 0.3,
+          }} />
+          <div data-no-drag className="relative z-[2] flex items-center gap-2 px-4 py-2.5 border-b border-stone-300/30 bg-[#F0EDE6]/80">
+            <div className="flex gap-1.5">
+              <div className="w-[11px] h-[11px] rounded-full bg-[#FF5F57] border border-[#E0443E]" />
+              <div className="w-[11px] h-[11px] rounded-full bg-[#FEBC2E] border border-[#DEA123]" />
+              <div className="w-[11px] h-[11px] rounded-full bg-[#28C840] border border-[#1AAB29]" />
+            </div>
+            <div className="flex-1 text-center">
+              <span className="text-[11px] text-stone-400">
+                ~/shankar/projects
+              </span>
+            </div>
+            <div className="w-[52px]" />
+          </div>
+
+          {/* Mobile top tabs */}
+          <div className="relative z-[2] lg:hidden flex border-b border-stone-300/30 bg-[#EDE9E2]/60">
+            {sidebarItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => { setActiveSidebar(item.id); setOpenFolder(null); }}
+                className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2 text-[11px] cursor-pointer transition-colors ${
+                  activeSidebar === item.id
+                    ? "bg-[#E8E0D4] text-stone-800 font-medium"
+                    : "text-stone-500"
+                }`}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="relative z-[2] h-[500px] lg:h-[700px] lg:min-w-[1200px] overflow-hidden flex w-full">
+            {/* Desktop sidebar */}
+            <div data-no-drag className="hidden lg:block w-[170px] shrink-0 bg-[#EDE9E2]/60 backdrop-blur-sm border-r border-stone-300/30 py-3 px-2">
+              <p className="text-[11px] font-medium text-stone-400 px-2 mb-1">Favorites</p>
+              {sidebarItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => { setActiveSidebar(item.id); setOpenFolder(null); }}
+                  className={`w-full flex items-center gap-2 px-2 py-[5px] rounded-md text-[12px] text-left cursor-pointer transition-colors ${
+                    activeSidebar === item.id
+                      ? "bg-[#E8E0D4] text-stone-800"
+                      : "text-stone-600 hover:bg-stone-200/40"
+                  }`}
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="relative flex-1 min-h-[500px] lg:min-h-[700px] overflow-hidden min-w-0 w-full">
+              <AnimatePresence>
+                {!unlocked && (
+                  <motion.div
+                    className="absolute inset-0 z-10 backdrop-blur-md bg-white/30"
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                  />
+                )}
+              </AnimatePresence>
+              <AnimatePresence>
+                {!unlocked && (
+                  <LockNotification onUnlock={() => setUnlocked(true)} />
+                )}
+              </AnimatePresence>
+
+              <AnimatePresence mode="wait">
+                {activeSidebar === "yanliu" ? (
+                  <motion.div
+                    key="yanliu"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="h-full flex"
+                  >
+                    {/* Left: Folders */}
+                    <div
+                      data-no-drag
+                      className="pt-6 lg:pt-8 pl-4 lg:pl-8 pr-4 lg:pr-6 w-full lg:shrink-0 lg:transition-[width] lg:duration-[350ms] lg:ease-out"
+                      style={!isMobile ? { width: openFolder !== null ? 420 : "100%" } : undefined}
+                    >
+                      <div className={`grid grid-cols-3 ${openFolder !== null ? "lg:grid-cols-3" : "lg:grid-cols-5"} gap-x-4 lg:gap-x-10 gap-y-4 lg:gap-y-6 content-start w-fit`}>
+                        {siteConfig.sections.map((section, i) => (
+                          <FolderIcon
+                            key={section.id}
+                            color={folderColors[i]}
+                            title={section.title}
+                            icon={folderIcons[i]}
+                            isSelected={openFolder === i}
+                            onClick={() => setOpenFolder(openFolder === i ? null : i)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Right: Content preview */}
+                    <AnimatePresence>
+                      {openFolder !== null && (
+                        <motion.div
+                          data-no-drag
+                          key="preview"
+                          className="absolute lg:relative inset-0 lg:inset-auto border-l-0 lg:border-l border-stone-200/60 h-full lg:h-[700px] w-full lg:w-[580px] shrink-0 ml-auto flex flex-col z-10"
+                          initial={{ opacity: 0, x: 40 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 40 }}
+                          transition={{ duration: 0.35, ease: "easeOut" }}
+                          style={{ backgroundColor: "#FAF8F5" }}
+                        >
+                          <button
+                            onClick={() => setOpenFolder(null)}
+                            className="absolute top-2 right-2 z-10 w-6 h-6 flex items-center justify-center rounded-full bg-white/40 backdrop-blur-sm hover:bg-white/70 text-stone-600 hover:text-stone-800 transition-colors cursor-pointer"
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <line x1="18" y1="6" x2="6" y2="18" />
+                              <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                          </button>
+                          <div className="flex-1 overflow-y-auto">
+                            <AnimatePresence mode="wait">
+                              <motion.div
+                                key={openFolder}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                              >
+                                <div className="relative w-full aspect-video lg:aspect-auto lg:h-[340px] overflow-hidden">
+                                  <Image src={folderImages[openFolder]} alt={folderContent[openFolder].title} width={580} height={340} className="w-full h-full object-contain bg-black" priority />
+                                </div>
+                                <div className="p-5 space-y-4">
+                                  <h3 className="text-[16px] font-medium text-stone-800">{folderContent[openFolder].title}</h3>
+                                  {folderContent[openFolder].description.split("\n\n").map((para, i) => (
+                                    <p key={i} className="text-stone-600 leading-relaxed text-[14px]">
+                                      {renderBold(para)}
+                                    </p>
+                                  ))}
+                                  {Boolean(folderContent[openFolder].note) && (
+                                    <p className="text-stone-500 italic text-[13px] leading-relaxed">
+                                      {folderContent[openFolder].note}
+                                    </p>
+                                  )}
+                                  {folderContent[openFolder]?.cta && (() => {
+                                    const cta = folderContent[openFolder].cta;
+                                    const links = Array.isArray(cta) ? cta.flat() : [cta];
+                                    return (
+                                      <div className="flex gap-4 flex-wrap pt-2">
+                                        {links.map((link, li) => (
+                                          <a
+                                            key={li}
+                                            href={(link as {label: string; url: string}).url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-block text-[13px] px-4 py-1.5 rounded-md border border-stone-700 text-stone-700 hover:bg-stone-700 hover:text-white transition-colors"
+                                          >
+                                            {(link as {label: string; url: string}).label}
+                                          </a>
+                                        ))}
+                                      </div>
+                                    );
+                                  })()}
+                                </div>
+                              </motion.div>
+                            </AnimatePresence>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                ) : activeSidebar === "applications" ? (
+                  <motion.div
+                    key="applications"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="h-full overflow-hidden"
+                  >
+                    <div className="grid grid-cols-5 gap-y-6 gap-x-2 px-8 py-8 justify-items-center">
+                      {appTools.map((tool, i) => (
+                        <div key={i} className="flex flex-col items-center gap-1.5">
+                          <img src={tool.icon} alt={tool.label} className="w-[56px] h-[56px] object-cover rounded-[13px] shadow-sm" />
+                          <span className="text-[11px] text-stone-600 text-center leading-tight">{tool.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                ) : activeSidebar === "documents" ? (
+                  <motion.div
+                    key="documents"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="h-[700px] overflow-hidden"
+                  >
+                    <div className="grid grid-cols-4 gap-x-2 gap-y-4 p-5 items-start content-start">
+                      {[
+                        { name: "Yan Liu\nresume.pdf", color: "#3b82f6" },
+                        { name: "Portfolio\nCase Study.pdf", color: "#8b5cf6" },
+                      ].map((doc, i) => (
+                        <motion.a
+                          key={doc.name}
+                          href="https://yanliu.design/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.1 }}
+                          whileHover={{ y: -4 }}
+                          className="flex flex-col items-center gap-1.5 cursor-pointer group"
+                        >
+                          <div className="relative w-[90px] h-[110px]">
+                            <svg width="90" height="110" viewBox="0 0 90 110" fill="none">
+                              <path d="M6 2h58l20 20v82a4 4 0 01-4 4H6a4 4 0 01-4-4V6a4 4 0 014-4z" fill="white" stroke="#d4d4d4" strokeWidth="0.8"/>
+                              <path d="M64 2v16a4 4 0 004 4h16" fill="#ebebeb" stroke="#d4d4d4" strokeWidth="0.8" strokeLinejoin="round"/>
+                              <rect x="12" y="28" width="30" height="3" rx="1.5" fill="#c8c8c8"/>
+                              <rect x="12" y="36" width="56" height="2" rx="1" fill="#e0e0e0"/>
+                              <rect x="12" y="42" width="50" height="2" rx="1" fill="#e0e0e0"/>
+                              <rect x="12" y="48" width="54" height="2" rx="1" fill="#e0e0e0"/>
+                              <rect x="12" y="54" width="42" height="2" rx="1" fill="#e0e0e0"/>
+                              <rect x="12" y="60" width="56" height="2" rx="1" fill="#e0e0e0"/>
+                              <rect x="12" y="66" width="38" height="2" rx="1" fill="#e0e0e0"/>
+                              <rect x="12" y="72" width="48" height="2" rx="1" fill="#e0e0e0"/>
+                              <text x="45" y="95" textAnchor="middle" fill="#a8a29e" fontSize="12" fontWeight="500">PDF</text>
+                            </svg>
+                          </div>
+                          <span className="text-[11px] text-stone-600 group-hover:text-stone-800 text-center leading-tight max-w-[100px] transition-colors whitespace-pre-line">{doc.name}</span>
+                        </motion.a>
+                      ))}
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="empty"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="h-[700px]"
+                  />
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function PortfolioViewer() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isMobileView, setIsMobileView] = useState(false);
+  React.useEffect(() => { setIsMobileView(window.innerWidth < 1024); }, []);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [80, -80]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [0.9, 1]);
+  const rotate = useTransform(scrollYProgress, [0, 0.5], [2, 0]);
+
+  return (
+    <section
+      ref={ref}
+      id="work"
+      className="flex flex-col items-center px-0 lg:px-6 pt-20 lg:pt-52 pb-12 overflow-hidden lg:overflow-visible scroll-mt-16"
+      style={!isMobileView ? { scrollMarginTop: "-180px" } : undefined}
+    >
+      <motion.div style={{ y, scale, rotate }}>
+        <FolderWindowContent />
+      </motion.div>
+    </section>
+  );
+}

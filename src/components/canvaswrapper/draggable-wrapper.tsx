@@ -1,4 +1,4 @@
-import { motion, PanInfo, useAnimation, useDragControls, useMotionValue, useTransform } from "framer-motion";
+import { motion, PanInfo, useDragControls, useMotionValue } from "framer-motion";
 import React, { forwardRef, useImperativeHandle, useState, useEffect, useRef } from "react";
 
 export interface DraggableWrapperRef {
@@ -9,118 +9,116 @@ interface DraggableWrapperProps {
   children: React.ReactNode;
   constraintsRef: React.RefObject<HTMLElement>;
   onFirstDrag?: () => void;
+  initialX?: number;
+  initialY?: number;
 }
 
 const DraggableWrapper = forwardRef<DraggableWrapperRef, DraggableWrapperProps>(
-  ({ children, constraintsRef, onFirstDrag }, ref) => {
-    const [isDragging, setIsDragging] = useState(false);
+  ({ children, constraintsRef, onFirstDrag, initialX = 0, initialY = 0 }, ref) => {
     const [hasBeenDragged, setHasBeenDragged] = useState(false);
-    const controls = useAnimation();
     const dragControls = useDragControls();
-    const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 });
 
-    // Motion values for trackpad gestures
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
+    // Motion values for trackpad & mouse panning
+    const x = useMotionValue(initialX);
+    const y = useMotionValue(initialY);
     const containerRef = useRef<HTMLDivElement>(null);
 
+    // Cache bounds once — recomputed only on resize, not on every drag frame
+    const cachedBounds = useRef<{ left: number; right: number; top: number; bottom: number } | null>(null);
+
+    const computeBounds = () => {
+      if (constraintsRef.current && containerRef.current) {
+        const cW = constraintsRef.current.offsetWidth;
+        const cH = constraintsRef.current.offsetHeight;
+        const dW = containerRef.current.offsetWidth;
+        const dH = containerRef.current.offsetHeight;
+        cachedBounds.current = {
+          left:   -(cW - dW) / 2,
+          right:   (cW - dW) / 2,
+          top:    -(cH - dH) / 2,
+          bottom:  (cH - dH) / 2,
+        };
+      }
+    };
+
+    const clampToBounds = (nx: number, ny: number) => {
+      const b = cachedBounds.current;
+      if (!b) return;
+      x.set(Math.max(b.left, Math.min(b.right, nx)));
+      y.set(Math.max(b.top,  Math.min(b.bottom, ny)));
+    };
+
     const handleDragStart = () => {
-      setIsDragging(true);
+      computeBounds(); // compute once at start of each drag gesture
       if (!hasBeenDragged) {
         setHasBeenDragged(true);
         onFirstDrag?.();
       }
     };
 
-    const handleDragEnd = (
-      event: MouseEvent | TouchEvent | PointerEvent,
-      info: PanInfo
-    ) => {
-      setIsDragging(false);
-    };
-
-    // Handle two-finger trackpad gestures
+    // Handle wheel and trackpad two-finger scroll
     useEffect(() => {
+      computeBounds();
+
       const container = containerRef.current;
       if (!container) return;
 
       const handleWheel = (event: WheelEvent) => {
-        // Check if this is likely a trackpad gesture (has deltaX and smoother values)
-        const isTrackpad = Math.abs(event.deltaX) > 0 || event.deltaMode === 0;
+        const target = event.target as HTMLElement | null;
+        if (target) {
+          const hasNoDrag  = target.closest('[data-no-drag]');
+          const isCard     = target.closest('[data-draggable-card]');
+          const isScrollable = target.closest('.overflow-y-auto, .overflow-auto, .overflow-scroll');
+          if (hasNoDrag || isCard || isScrollable) return;
+        }
 
-        if (isTrackpad) {
-          event.preventDefault();
+        event.preventDefault();
 
-          const sensitivity = 0.8;
-          const deltaX = -event.deltaX * sensitivity;
-          const deltaY = -event.deltaY * sensitivity;
+        const sensitivity = 0.8;
+        const newX = x.get() + -event.deltaX * sensitivity;
+        const newY = y.get() + -event.deltaY * sensitivity;
+        clampToBounds(newX, newY);
 
-          // Get current position
-          const currentX = x.get();
-          const currentY = y.get();
-
-          // Calculate new position
-          const newX = currentX + deltaX;
-          const newY = currentY + deltaY;
-
-          // Apply constraints similar to drag constraints
-          if (constraintsRef.current && containerRef.current) {
-            const constraintsRect = constraintsRef.current.getBoundingClientRect();
-            const containerRect = containerRef.current.getBoundingClientRect();
-
-            // Calculate the bounds based on the difference between constraint and draggable element
-            const bounds = {
-              left: -(constraintsRect.width - containerRect.width) / 2,
-              right: (constraintsRect.width - containerRect.width) / 2,
-              top: -(constraintsRect.height - containerRect.height) / 2,
-              bottom: (constraintsRect.height - containerRect.height) / 2,
-            };
-
-            const constrainedX = Math.max(bounds.left, Math.min(bounds.right, newX));
-            const constrainedY = Math.max(bounds.top, Math.min(bounds.bottom, newY));
-
-            x.set(constrainedX);
-            y.set(constrainedY);
-          } else {
-            x.set(newX);
-            y.set(newY);
-          }
-
-          // Trigger first drag callback if needed
-          if (!hasBeenDragged) {
-            setHasBeenDragged(true);
-            onFirstDrag?.();
-          }
+        if (!hasBeenDragged) {
+          setHasBeenDragged(true);
+          onFirstDrag?.();
         }
       };
 
+      const handleResize = () => computeBounds();
+
       container.addEventListener('wheel', handleWheel, { passive: false });
+      window.addEventListener('resize', handleResize, { passive: true });
 
       return () => {
         container.removeEventListener('wheel', handleWheel);
+        window.removeEventListener('resize', handleResize);
       };
-    }, [x, y, constraintsRef, hasBeenDragged, onFirstDrag]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hasBeenDragged, onFirstDrag]);
+
+    const handleDrag = (
+      _event: MouseEvent | TouchEvent | PointerEvent,
+      info: PanInfo
+    ) => {
+      clampToBounds(x.get() + info.delta.x, y.get() + info.delta.y);
+    };
 
     const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-      // Check if the clicked element is interactive
       const target = event.target as HTMLElement;
       const isCanvas = target.tagName === 'CANVAS';
       const hasNoDrag = target.closest('[data-no-drag]');
       const isDraggableCard = target.closest('[data-draggable-card]');
-      const isInteractive = isCanvas || hasNoDrag || isDraggableCard;
+      const isButton = target.closest('button, a, input, select, textarea');
 
-      if (isInteractive) {
+      if (isCanvas || hasNoDrag || isDraggableCard || isButton) return;
 
-        return; // Don't start drag
-      }
-
-
-      dragControls.start(event);
+      dragControls.start(event.nativeEvent);
     };
 
     useImperativeHandle(ref, () => ({
       startDrag: (event: React.PointerEvent<HTMLDivElement>) => {
-        dragControls.start(event);
+        dragControls.start(event.nativeEvent);
       },
     }));
 
@@ -128,19 +126,17 @@ const DraggableWrapper = forwardRef<DraggableWrapperRef, DraggableWrapperProps>(
       <motion.div
         ref={containerRef}
         drag
-        dragListener={false} // Disable automatic drag listener
-        dragControls={dragControls} // Use manual drag controls
+        dragListener={false}
+        dragControls={dragControls}
         dragConstraints={constraintsRef}
         dragElastic={0}
         dragMomentum={false}
-        dragTransition={{ power: 0.2, timeConstant: 100 }}
+        dragTransition={{ power: 0, timeConstant: 0 }}
         onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
+        onDrag={handleDrag}
         onPointerDown={handlePointerDown}
         className="cursor-move touch-none w-dvw h-dvh"
-        style={{ x, y }} // Use motion values for trackpad gestures
-        whileHover={{ cursor: 'auto' }}
-
+        style={{ x, y, willChange: 'transform' }}
       >
         {children}
       </motion.div>

@@ -226,8 +226,8 @@ export default function Home() {
             {/* STICKERS & STAMPS */}
             <Image draggable="false" loading="lazy" style={{ "--stagger": 10 } as React.CSSProperties} className="select-none relative w-36 col-start-1 row-start-1 left-[260px] top-[40px] rotate-[-18deg]" width={600} height={600} src="/about-me/stickers/Ken.png" alt="Ken Sticker" />
 
-            {/* India Stamp (Moved to Zone 2 at x=760) */}
-            <Image style={{ "--stagger": 36 } as React.CSSProperties} draggable="false" loading="lazy" className="shadow-lg select-none relative col-start-3 row-start-1 left-[8px] top-[40px] rotate-[9deg]" width={140} height={139} src="/about-me/stickers/india-stamp.png" alt="India Stamp" />
+            {/* India Stamp (Moved further left to avoid image overlap) */}
+            <Image style={{ "--stagger": 36 } as React.CSSProperties} draggable="false" loading="lazy" className="shadow-lg select-none relative col-start-3 row-start-1 left-[-60px] top-[40px] rotate-[9deg]" width={140} height={139} src="/about-me/stickers/india-stamp.png" alt="India Stamp" />
 
             <Image style={{ "--stagger": 8 } as React.CSSProperties} draggable="false" loading="lazy" className="pointer-events-none select-none relative col-start-3 row-start-1 left-[348px] top-[40px] rotate-[15deg]" width={80} height={70} src="/about-me/stickers/vercel.png" alt="Vercel" />
 

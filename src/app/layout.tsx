@@ -12,6 +12,7 @@ import Dock from "@/components/dock/dock";
 const notoSans = Noto_Sans({
   subsets: ['latin'],
   variable: '--font-noto',
+  display: 'swap',
 })
 
 const Sohne = localFont({
@@ -20,7 +21,6 @@ const Sohne = localFont({
       path: './fonts/soehne-buch.woff2',
       weight: '400',
       style: 'normal',
-
     },
     {
       path: './fonts/soehne-kraftig.woff2',
@@ -29,6 +29,7 @@ const Sohne = localFont({
     }
   ],
   variable: '--font-sohne',
+  display: 'swap',
 })
 
 const Plantijn = localFont({
@@ -38,12 +39,14 @@ const Plantijn = localFont({
     style: 'italic'
   }],
   variable: '--font-plantijn',
+  display: 'swap',
 })
 
 const kalam = Kalam({
   subsets: ['latin'],
   weight: ['300', '400', '700'],
   variable: '--font-handwritten',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
@@ -54,10 +57,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
 
   return (
-    <html lang="en" suppressHydrationWarning >
-
-      <Script id="show-fullstory">
-        {`window['_fs_host'] = 'fullstory.com';
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${Sohne.variable} ${Plantijn.variable} ${kalam.variable} ${notoSans.variable} ${"bg-background"}`}>
+        <SpeedInsights />
+        <Analytics />
+        <Script
+          id="show-fullstory"
+          strategy="afterInteractive"
+        >
+          {`window['_fs_host'] = 'fullstory.com';
 window['_fs_script'] = 'edge.fullstory.com/s/fs.js';
 window['_fs_org'] = '15BFTQ';
 window['_fs_namespace'] = 'FS';
@@ -77,23 +85,14 @@ name:b,properties:d},j)},g.anonymize=function(){r(!1)},g.shutdown=function(){h("
 g.log=function(b,d){h("log",{level:b,msg:d})},g.consent=function(b){h("setIdentity",{consent:!arguments.length||b})}}(),s="fetch",
 f="XMLHttpRequest",g._w={},g._w[f]=m[f],g._w[s]=m[s],m[s]&&(m[s]=function(){return g._w[s].apply(this,arguments)}),g._v="2.0.0")
 }(window,document,window._fs_namespace,"script",window._fs_script);`}
-      </Script>
-
-      <head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=psychiatry,sunny" />
-      </head>
-      <body className={`${Sohne.variable} ${Plantijn.variable} ${kalam.variable} ${notoSans.variable} ${"bg-background"}`}>
-        <SpeedInsights />
-        <Analytics />
+        </Script>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AlbumProvider>
-
             {children}
-
             <Dock></Dock>
           </AlbumProvider>
         </ThemeProvider>
       </body>
-    </html >
+    </html>
   );
 }

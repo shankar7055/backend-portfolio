@@ -147,6 +147,17 @@ export default function Home() {
 
                 <ul className="flex flex-col gap-4">
                   <li className="flex flex-row gap-4 inline-flex items-center justify-center">
+                    <div className="hidden sm:block size-10 flex-none inline-flex items-center justify-center rounded-sm bg-[#00A868]"></div>
+                    <div className="flex flex-row w-full justify-between sm:items-center gap-4">
+                      <div className="flex flex-col">
+                        <span className="text-sm sm:text-base font-medium"> Axevron Digital Solutions </span>
+                        <span className="text-sm text-muted-foreground"> Backend Intern </span>
+                      </div>
+                      <Badge variant="secondary" className="tabular text-xs font-normal text-muted-foreground w-fit">Apr – Jul 2026</Badge>
+                    </div>
+                  </li>
+
+                  <li className="flex flex-row gap-4 inline-flex items-center justify-center">
                     <div className="hidden sm:block h-10 w-10 flex-none inline-flex items-center justify-center rounded-sm bg-[#1798D5]"></div>
                     <div className="flex flex-row w-full justify-between sm:items-center gap-4">
                       <div className="flex flex-col">
@@ -154,17 +165,6 @@ export default function Home() {
                         <span className="text-sm text-muted-foreground"> Backend Intern </span>
                       </div>
                       <Badge variant="secondary" className="tabular text-xs font-normal text-muted-foreground w-fit">May – Jul 2025</Badge>
-                    </div>
-                  </li>
-
-                  <li className="flex flex-row gap-4 inline-flex items-center justify-center">
-                    <div className="hidden sm:block size-10 flex-none inline-flex items-center justify-center rounded-sm bg-[#00A868]"></div>
-                    <div className="flex flex-row w-full justify-between sm:items-center gap-4">
-                      <div className="flex flex-col">
-                        <span className="text-sm sm:text-base font-medium"> Axevron Digital Solutions </span>
-                        <span className="text-sm text-muted-foreground"> Backend Intern </span>
-                      </div>
-                      <Badge variant="secondary" className="tabular text-xs font-normal text-muted-foreground w-fit">Apr – Jul 2024</Badge>
                     </div>
                   </li>
                 </ul>

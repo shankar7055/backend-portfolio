@@ -106,6 +106,7 @@ function FolderIcon({ color, title, onClick, isSelected, icon }: {
 
   return (
     <motion.button
+      data-no-drag
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -451,7 +452,6 @@ export function FolderWindowContent() {
                   >
                     {/* Left: Folders */}
                     <div
-                      data-no-drag
                       className="pt-6 lg:pt-8 pl-4 lg:pl-8 pr-4 lg:pr-6 w-full lg:shrink-0 lg:transition-[width] lg:duration-[350ms] lg:ease-out"
                       style={!isMobile ? { width: openFolder !== null ? 420 : "100%" } : undefined}
                     >
